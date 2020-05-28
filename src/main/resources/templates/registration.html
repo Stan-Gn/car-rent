@@ -117,7 +117,7 @@
           <div class="registration-block text-center">
             <div class="registration-block-inner">
               <h3 class="title">create your account</h3>
-              <form class="registration-form" action="#" th:action="@{/saveUser}" th:object="${user}" method="POST">
+              <form class="registration-form" action="#" th:action="@{/registration}" th:object="${user}" method="POST">
                 <div class="frm-group">
                   <input type="text" th:field="*{name}" id="f-name" placeholder="First Name">
                   <p class="reg-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
@@ -137,6 +137,7 @@
                 <div class="frm-group">
                   <input type="submit" value="create new account">
                   <p class="reg-success"  th:text="${regSuccess}"></p>
+                  <p class="reg-error-email"  th:text="${emailExists}"></p>
                 </div>
               </form>
             </div>

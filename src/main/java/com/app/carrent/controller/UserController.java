@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -36,13 +34,17 @@ public class UserController {
         return modelAndView;
     }
 
-    @PostMapping("/saveUser")
-    public String saveUser(@Valid User user, BindingResult bindingResult, Model model) {
+    @PostMapping("/registration")
+    public String saveUser(@Valid User user, BindingResult bindingResult, Model model) throws Exception {
         if (bindingResult.hasErrors())
             return "registration";
 
-        model.addAttribute("regSuccess", "registration completed successfully");
+        if(userService.findUserByEmail(user.getEmail()).isPresent()) {
+            model.addAttribute("emailExists", "The user already exists with this email address");
+            return "registration";
+        }
         userService.saveUser(user);
+        model.addAttribute("regSuccess", "registration completed successfully");
         return "registration";
     }
 }

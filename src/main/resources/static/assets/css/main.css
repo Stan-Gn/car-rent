@@ -4215,6 +4215,9 @@ input[type=checkbox]:checked+label:before {
     text-align: left;
     position: absolute;
 }
+.reg-error-email{
+    color: red;
+}
 
 .reg-success{
     color: green;

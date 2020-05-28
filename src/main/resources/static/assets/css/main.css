@@ -4108,7 +4108,7 @@ input[type="checkbox"] {
 }
 
 .registration-block .registration-block-inner .registration-form .frm-group {
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 .registration-block .registration-block-inner .registration-form .frm-group input {
@@ -4196,7 +4196,7 @@ input[type=checkbox]:checked+label:before {
 }
 
 .registration-block .registration-block-inner .registration-form .frm-group {
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 .registration-block .registration-block-inner .registration-form .frm-group input {
@@ -4208,6 +4208,16 @@ input[type=checkbox]:checked+label:before {
     color: #ffffff;
     background-color: #da1c36;
     cursor: pointer;
+}
+
+.reg-error{
+    color: red;
+    text-align: left;
+    position: absolute;
+}
+
+.reg-success{
+    color: green;
 }
 
 input[type=checkbox]+label {

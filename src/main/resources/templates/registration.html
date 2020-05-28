@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
   <meta charset="UTF-8">
@@ -117,31 +117,26 @@
           <div class="registration-block text-center">
             <div class="registration-block-inner">
               <h3 class="title">create your account</h3>
-              <form class="registration-form">
+              <form class="registration-form" action="#" th:action="@{/saveUser}" th:object="${user}" method="POST">
                 <div class="frm-group">
-                  <input type="text" name="f-name" id="f-name" placeholder="First Name">
+                  <input type="text" th:field="*{name}" id="f-name" placeholder="First Name">
+                  <p class="reg-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
                 </div>
                 <div class="frm-group">
-                  <input type="text" name="l-name" id="l-name" placeholder="Last Name">
+                  <input type="text" th:field="*{surname}" id="l-name" placeholder="Last Name">
+                  <p class="reg-error" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></p>
                 </div>
                 <div class="frm-group">
-                  <input type="email" name="name" id="name" placeholder="Your Email">
+                  <input type="email" th:field="*{email}" id="name" placeholder="Your Email">
+                  <p class="reg-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
                 </div>
                 <div class="frm-group">
-                  <input type="url" name="website" id="website" placeholder="Your Website">
-                </div>
-                <div class="frm-group">
-                  <input type="password" name="pass" id="pass" placeholder="Your Password">
-                </div>
-                <div class="frm-group">
-                  <input type="password" name="re-pass" id="re-pass" placeholder="Enter Re-Password">
+                  <input type="password" th:field="*{password}"id="pass" placeholder="Your Password">
+                  <p class="reg-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
                 </div>
                 <div class="frm-group">
                   <input type="submit" value="create new account">
-                </div>
-                <div class="frm-group">
-                  <input type="checkbox" name="checkbox" id="checkbox" value="yes">
-                  <label for="checkbox">I wish subscribe newslatter</label>
+                  <p class="reg-success"  th:text="${regSuccess}"></p>
                 </div>
               </form>
             </div>

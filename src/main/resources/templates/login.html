@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 
 <head>
@@ -119,18 +119,20 @@
           <div class="login-block text-center">
             <div class="login-block-inner">
               <h3 class="title">login your account </h3>
-              <form class="login-form">
+              <form class="login-form"  th:action="@{/login}" method="post">
                 <div class="frm-group">
-                  <input type="text" name="f-name" id="f-name" placeholder="Your e-mail">
+                  <input type="text" name="username" id="f-name" placeholder="Your e-mail">
                 </div>
                 <div class="frm-group">
-                  <input type="password" name="pass" id="pass" placeholder="Your Password">
+                  <input type="password" name="password"  id="pass" placeholder="Your Password">
                 </div>
                 <div class="frm-group">
                   <input type="submit" value="login account">
                 </div>
+                <div th:if="${param.error}">Invalid username and password.</div>
+                <div th:if="${param.logout}">Logout successful.</div>
               </form>
-              <p><a href="#0">Haven't your any account in here?</a><a href="#0">Forget password?</a></p>
+             <p><a href="#0">Forget password?</a></p>
             </div>
           </div>
         </div>

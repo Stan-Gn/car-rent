@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
   <meta charset="UTF-8">
@@ -63,9 +63,12 @@
           </div>
           <div class="col-lg-3">
             <div class="header-action d-flex align-items-center justify-content-end">
-              <div class="login-reg">
+              <div class="login-reg" sec:authorize="isAnonymous()">
                 <a href="/login">Login </a>
                 <a href="/registration">Registration</a>
+              </div>
+              <div class="login-reg" sec:authorize="isAuthenticated()">
+                <a href="/logout">Logout </a>
               </div>
             </div>
           </div>

@@ -1,5 +1,6 @@
 package com.app.carrent.configuration;
 
+import com.app.carrent.component.SimpleUrlAuthenticationSuccessHandler;
 import com.app.carrent.service.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -32,10 +34,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().disable();
         http.formLogin().loginPage("/login")
                 .failureUrl("/login?error")
-                .defaultSuccessUrl("/")
+                .successHandler(mySuccessHandler())
                 .and()
                 .logout().logoutSuccessUrl("/login?logout");
 
+    }
+
+    @Bean
+
+    public AuthenticationSuccessHandler mySuccessHandler() {
+        return new SimpleUrlAuthenticationSuccessHandler();
     }
 
     @Bean

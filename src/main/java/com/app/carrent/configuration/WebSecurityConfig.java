@@ -32,7 +32,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.headers().disable();
-        http.formLogin().loginPage("/login")
+        http.authorizeRequests()
+                .antMatchers("/reservation/**").authenticated()
+                .and()
+                .formLogin().loginPage("/login")
                 .failureUrl("/login?error")
                 .successHandler(mySuccessHandler())
                 .and()

@@ -144,7 +144,7 @@
       <div class="row mt-70">
         <div class="col-lg-8">
           <div class="car-search-result-area grid--view row mb-none-30">
-            <div class="col-md-6 col-12"  th:each="car : ${cars}">
+            <div class="col-md-6 col-12"  th:each="car : ${carsPage}">
               <div class="car-item">
                 <div class="thumb bg_img" data-background="assets/images/cars/4.jpg"></div>
                 <div class="car-item-body">
@@ -166,12 +166,10 @@
             </div><!-- car-item end -->
           </div>
           <nav class="d-pagination" aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-              <li class="page-item active"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">4</a></li>
-              <li class="page-item"><a class="page-link" href="#">5</a></li>
+            <ul class="pagination justify-content-center" >
+              <li th:if="${carsPage.totalPages > 0}" th:each="pageNumber : ${pageNumbers}"  th:class="${pageNumber==carsPage.number + 1} ? 'page-item active' : 'page-item'">
+                <a class="page-link" th:href="@{/cars(page=${pageNumber})}" th:text=${pageNumber}></a>
+              </li>
             </ul>
           </nav>
         </div>

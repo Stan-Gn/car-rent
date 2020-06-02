@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
   <meta charset="UTF-8">
@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Renten - Car Rental Service HTML Template</title>
   <!-- site favicon -->
-  <link rel="shortcut icon" type="image/png" href="assets/images/favicon.jpg" />
+  <link rel="shortcut icon" type="image/png" href="assets/images/favicon.jpg"/>
   <!-- fontawesome css link -->
   <link rel="stylesheet" href="assets/css/fontawesome.min.css">
   <!-- bootstrap css link -->
@@ -29,12 +29,11 @@
   <!-- main style css link -->
   <link rel="stylesheet" href="assets/css/main.css">
 </head>
-
 <body>
 
   <!-- preloader start -->
   <div id="preloader"></div>
-  <!-- preloader end -->
+  <!-- preloader end -->   
 
   <!--  header-section start  -->
   <header class="header-section">
@@ -100,11 +99,10 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12">
-          <h2 class="page-title">reservation</h2>
+          <h2 class="page-title">page not found</h2>
           <ol class="page-list">
             <li><a href="/"><i class="fa fa-home"></i> Home</a></li>
-            <li><a href="/cars">car list</a></li>
-            <li>reservation</li>
+            <li>Error</li>
           </ol>
         </div>
       </div>
@@ -112,79 +110,21 @@
   </section>
   <!-- inner-apge-banner end -->
 
-  <!-- reservation-section start -->
-  <section class="reservation-section pt-120 pb-120">
+  <!-- error-section start -->
+  <section class="error-section pt-120 pb-120">
     <div class="container">
-      <div class="row">
+      <div class="row justify-content-center">
         <div class="col-lg-8">
-          <div class="reservation-details-area">
-            <div class="thumb">
-              <img src="assets/images/cars/b1.jpg" alt="images">
-            </div>
-            <div class="content">
-              <div class="content-block">
-                <h3 class="car-name" th:text="${carToRent.mark} + ' ' + ${carToRent.model}"></h3>
-                <span class="price" th:text="'start form ' + ${carToRent.pricePerDay} + ' per day'"></span>
-                <p th:text="${carToRent.description}"></p>
-              </div>
-              <form class="reservation-form">
-                <div class="content-block">
-                  <h3 class="title">extra benifit and fee</h3>
-                  <div class="row">
-                    <div class="form-group col-md-6">
-                      <i class="fa fa-calendar"></i>
-                      <input type='text' class='form-control has-icon datepicker-here' data-language='en'
-                        placeholder="Pickup Date">
-                    </div>
-                    <div class="form-group col-md-6">
-                      <i class="fa fa-clock-o"></i>
-                      <input type="text" name="timepicker" class="form-control has-icon timepicker"
-                        placeholder="Pickup Time">
-                    </div>
-                    <div class="form-group col-md-6">
-                      <i class="fa fa-calendar"></i>
-                      <input type='text' class='form-control has-icon datepicker-here' data-language='en'
-                        placeholder="Drop Off Date">
-                    </div>
-                    <div class="form-group col-md-6">
-                      <i class="fa fa-clock-o"></i>
-                      <input type="text" name="timepicker" class="form-control has-icon timepicker"
-                        placeholder="Drop Off Time">
-                    </div>
-                  </div>
-                </div>
-                <div class="content-block">
-                  <h3 class="title">conflicting dates</h3>
-                  <div class="row">
-                    <!--TODO list conflicting dates -->
-                  </div>
-                </div>
-                <div class="content-block">
-                  <div class="row">
-                    <div class="col-lg-12">
-                      <button type="reset" class="cmn-btn bg-black">Cancel</button>
-                      <button type="submit" class="cmn-btn">reservation</button>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
+          <div class="error-content text-center">
+            <h2 class="title">Oops! Error </h2>
+            <p>Quisque cras molestie dictum, aliquam litora. Tempus amet pellentesque vitae ante, consectequat sed vestibulum fringilla dictum, enim a taciti et orci fusce, non suspendisse, nunc at rutrumPellentesque turpis et nonummy eu nulla. Quis gravida ultrices nam vehicula adipiscing quam.</p>
+            <a href="/" class="cmn-btn">got to home</a>
           </div>
-        </div>
-        <div class="col-lg-4">
-          <aside class="sidebar">
-            <div class="widget widget-all-cars">
-              <h4 class="widget-title">our all cars</h4>
-              <ul class="cars-list" th:each="car :  ${@fiveCars}">
-                <li><a th:href="@{/reservation(id=${car.id})}" th:text="${car.mark} + ' ' + ${car.model}" ></a></li>
-              </ul>
-            </div>
-          </aside>
         </div>
       </div>
     </div>
   </section>
-  <!-- reservation-section end -->
+  <!-- error-section end -->
 
   <!-- footer-section start -->
   <footer class="footer-section">
@@ -242,7 +182,8 @@
       </div>
     </div>
   </footer>
-
+  <!-- footer-section end -->
+  
   <!-- scroll-to-top start -->
   <div class="scroll-to-top">
     <span class="scroll-icon">

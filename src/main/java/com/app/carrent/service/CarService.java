@@ -4,9 +4,10 @@ package com.app.carrent.service;
 import com.app.carrent.model.Car;
 import com.app.carrent.repository.CarRepositoryInterface;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,8 +21,11 @@ public class CarService {
         this.carRepository = carRepository;
     }
 
-    public List<Car> getAllCars() {
+    public List<Car> findAll() {
         return carRepository.findAll();
+    }
+    public Page<Car> findAll(PageRequest pageRequest) {
+        return carRepository.findAll(pageRequest);
     }
 
     public Car findCarById(long id) {

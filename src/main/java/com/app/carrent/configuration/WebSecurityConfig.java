@@ -1,6 +1,6 @@
 package com.app.carrent.configuration;
 
-import com.app.carrent.component.SimpleUrlAuthenticationSuccessHandler;
+import com.app.carrent.AuthenticationComponent.SimpleAuthenticationSuccessHandler;
 import com.app.carrent.service.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -44,9 +44,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-
     public AuthenticationSuccessHandler mySuccessHandler() {
-        return new SimpleUrlAuthenticationSuccessHandler();
+        return new SimpleAuthenticationSuccessHandler();
     }
 
     @Bean

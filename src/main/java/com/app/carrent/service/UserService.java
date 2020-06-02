@@ -20,11 +20,6 @@ public class UserService  {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User findUserById(long id){
-        //todo exception handling
-        return userRepository.findById(id).get();
-    }
-
     public Optional<User> findUserByEmail(String email){
         return userRepository.findByEmail(email);
     }

@@ -87,8 +87,7 @@
             <ul class="navbar-nav main-menu mr-auto">
               <li><a href="/">Home</a>
               <li><a href="/cars">cars</a>
-              <li><a href="contact.html">contact us</a></li>
-
+              <li><a href="/contact">contact us</a></li>
             </ul>
           </div>
         </nav>
@@ -295,7 +294,7 @@
           <div class="col-lg-4 col-sm-8">
             <div class="footer-widget widget-about">
               <div class="widget-about-content">
-                <a href="index.html" class="footer-logo"><img src="assets/images/logo-footer.png" alt="logo"></a>
+                <a href="/" class="footer-logo"><img src="assets/images/logo-footer.png" alt="logo"></a>
                 <p>Lorem ipsum dolor sit amet, congue placeranec. Leo faucibus sed eleifend bibendum n vehicula nulla
                   mauris nulla ipsum neque sed. Gravida egestas fermentum urna, velit sed. </p>
                 <ul class="social-links">
@@ -309,23 +308,14 @@
           </div>
           <div class="col-lg-2 col-sm-4">
             <div class="footer-widget widget-menu">
-              <h4 class="widget-title">our cars</h4>
-              <ul>
-                <li><a href="#0">mistubishi lancer</a></li>
-                <li><a href="#0">forester subar</a></li>
-                <li><a href="#0">mirage ange</a></li>
-                <li><a href="#0">pajero range</a></li>
-                <li><a href="#0">subaru liberty</a></li>
-              </ul>
+
             </div>
           </div>
           <div class="col-lg-2 col-sm-4">
             <div class="footer-widget widget-menu">
-              <h4 class="widget-title">useful link</h4>
-              <ul>
-                <li><a href="#0">about</a></li>
-                <li><a href="#0">reservation</a></li>
-                <li><a href="#0">car list</a></li>
+              <h4 class="widget-title">our cars</h4>
+              <ul th:each="car : ${@fiveCars}">
+                <li><a th:href="@{/reservation(id=${car.id})}" th:text="${car.mark} + ' ' + ${car.model}"></a></li>
               </ul>
             </div>
           </div>

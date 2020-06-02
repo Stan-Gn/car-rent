@@ -1,14 +1,12 @@
-package com.app.carrent.component;
+package com.app.carrent.AuthenticationComponent;
 
 import com.app.carrent.model.User;
-import com.app.carrent.repository.UserRepositoryInterface;
 import com.app.carrent.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +15,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Component
-public class SimpleUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+public class SimpleAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     @Autowired
     private UserService userService;
@@ -29,6 +27,7 @@ public class SimpleUrlAuthenticationSuccessHandler implements AuthenticationSucc
         if (session != null && user.isPresent()) {
             session.setAttribute("username", user.get().getName());
         }
-        httpServletResponse.sendRedirect("/");
+        super.onAuthenticationSuccess(httpServletRequest,httpServletResponse,authentication);
+
     }
 }

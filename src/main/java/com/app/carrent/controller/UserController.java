@@ -1,6 +1,7 @@
 package com.app.carrent.controller;
 
 import com.app.carrent.model.User;
+import com.app.carrent.service.CarService;
 import com.app.carrent.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,8 +24,9 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String login() {
-        return "login";
+    public ModelAndView login() {
+        ModelAndView modelAndView = new ModelAndView("login");
+        return modelAndView;
     }
 
     @GetMapping("/registration")
@@ -35,16 +37,22 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public String saveUser(@Valid User user, BindingResult bindingResult, Model model) throws Exception {
+    public String saveUser(@Valid User user, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors())
             return "registration";
 
-        if(userService.findUserByEmail(user.getEmail()).isPresent()) {
+        if (userService.findUserByEmail(user.getEmail()).isPresent()) {
             model.addAttribute("emailExists", "The user already exists with this email address");
             return "registration";
         }
         userService.saveUser(user);
         model.addAttribute("regSuccess", "registration completed successfully");
         return "registration";
+    }
+
+    @GetMapping("/contact")
+    public ModelAndView contact() {
+        ModelAndView modelAndView = new ModelAndView("contact");
+        return modelAndView;
     }
 }

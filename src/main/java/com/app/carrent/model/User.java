@@ -1,8 +1,6 @@
 package com.app.carrent.model;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,8 +10,7 @@ import java.util.Collection;
 
 
 @Entity
-@Getter
-@Setter
+@Data
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

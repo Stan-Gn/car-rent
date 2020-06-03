@@ -1,20 +1,18 @@
 package com.app.carrent.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Data
 public class CarRent {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private Date since;
-    private Date till;
+    private LocalDateTime pickUpDate;
+    private LocalDateTime dropOffDate;
     private double totalPrice;
     private boolean isReturned;
     @ManyToOne

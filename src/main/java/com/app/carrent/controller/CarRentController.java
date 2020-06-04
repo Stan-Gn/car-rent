@@ -1,5 +1,6 @@
 package com.app.carrent.controller;
 
+import com.app.carrent.controller.parser.CarRentDateTimeParser;
 import com.app.carrent.model.Car;
 import com.app.carrent.model.CarRent;
 import com.app.carrent.model.User;
@@ -56,8 +57,6 @@ public class CarRentController {
         PageRequest pageRequest = PageRequest.of(currentPage - 1, 4, sort);
         Page<Car> carsPage = carService.findAll(pageRequest);
 
-        List<Sort.Order> sortOrders = carsPage.getSort().stream().collect(Collectors.toList());
-
         if (currentPage > carsPage.getTotalPages())
             throw new NotFoundException("Page not found");
 
@@ -73,10 +72,10 @@ public class CarRentController {
         return modelAndView;
     }
 
-    private Map<String,String> sortProperties() {
+    private Map<String, String> sortProperties() {
         Map properties = new HashMap();
         properties.put("Price per day - asc", "pricePerDay,asc");
-        properties.put("Price per day - dsc" , "pricePerDay,desc");
+        properties.put("Price per day - dsc", "pricePerDay,desc");
         return properties;
 
     }
@@ -101,11 +100,11 @@ public class CarRentController {
         if (checkingIfDateTimeFieldsAreEmpty(pickUpDate, pickUpTime, dropOffDate, dropOffTime, modelAndView))
             return modelAndView;
 
-        LocalDateTime pickUp = parseLocalDateTime(pickUpDate, pickUpTime, modelAndView);
-        LocalDateTime dropOff = parseLocalDateTime(dropOffDate, dropOffTime, modelAndView);
+        LocalDateTime pickUp = CarRentDateTimeParser.parseLocalDateTime(pickUpDate, pickUpTime);
+        LocalDateTime dropOff = CarRentDateTimeParser.parseLocalDateTime(dropOffDate, dropOffTime);
 
         if (pickUp == null || dropOff == null)
-            return modelAndView;
+            return modelAndView.addObject("reservationError", "Invalid date format");
 
         if (checkingIfPickUpDateIsAfterDropOffDate(pickUp, dropOff, modelAndView))
             return modelAndView;
@@ -187,7 +186,7 @@ public class CarRentController {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy h : m a");
             localDateTime = LocalDateTime.parse(pickUpDate + " " + pickUpTime, formatter);
         } catch (Exception e) {
-            modelAndView.addObject("reservationError", "Invalid date format");
+
         }
         return localDateTime;
     }

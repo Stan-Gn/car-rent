@@ -10,6 +10,8 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +19,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -44,11 +48,16 @@ public class CarRentController {
     }
 
     @GetMapping("/cars")
-    private ModelAndView cars(@RequestParam("page") Optional<Integer> page) throws NotFoundException {
+    private ModelAndView cars(@RequestParam("page") Optional<Integer> page, Sort sort) throws NotFoundException {
         ModelAndView modelAndView = new ModelAndView("car-list-one");
+        modelAndView.addObject("sortProperties", sortProperties());
 
         int currentPage = page.orElse(1);
-        Page<Car> carsPage = carService.findAll(PageRequest.of(currentPage - 1, 4));
+        PageRequest pageRequest = PageRequest.of(currentPage - 1, 4, sort);
+        Page<Car> carsPage = carService.findAll(pageRequest);
+
+        List<Sort.Order> sortOrders = carsPage.getSort().stream().collect(Collectors.toList());
+
         if (currentPage > carsPage.getTotalPages())
             throw new NotFoundException("Page not found");
 
@@ -62,6 +71,14 @@ public class CarRentController {
             modelAndView.addObject("pageNumbers", pageNumbers);
         }
         return modelAndView;
+    }
+
+    private Map<String,String> sortProperties() {
+        Map properties = new HashMap();
+        properties.put("Price per day - asc", "pricePerDay,asc");
+        properties.put("Price per day - dsc" , "pricePerDay,desc");
+        return properties;
+
     }
 
     @GetMapping("/reservation")

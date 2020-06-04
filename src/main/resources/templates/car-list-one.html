@@ -124,11 +124,11 @@
                   <div class="col-lg-4 col-md-5 col-sm-6">
                     <div class="cart-sort-field">
                       <span class="caption">Sort by : </span>
-                      <select>
-                        <option>Pajero Range</option>
-                        <option>Toyota Axio</option>
-                        <option>Lancer</option>
-                      </select>
+                      <form >
+                        <select name="sort" onchange="this.form.submit()" >
+                          <option th:each="prop : ${sortProperties}" th:value="${prop.value}" th:text="${prop.key}"></option>
+                        </select>
+                      </form>
                     </div>
                   </div>
                 </div>
@@ -168,7 +168,7 @@
           <nav class="d-pagination" aria-label="Page navigation example">
             <ul class="pagination justify-content-center" >
               <li th:if="${carsPage.totalPages > 0}" th:each="pageNumber : ${pageNumbers}"  th:class="${pageNumber==carsPage.number + 1} ? 'page-item active' : 'page-item'">
-                <a class="page-link" th:href="@{/cars(page=${pageNumber})}" th:text=${pageNumber}></a>
+                <a class="page-link" th:href="@{/cars(page=${pageNumber},sort=${param.sort})}" th:text=${pageNumber}></a>
               </li>
             </ul>
           </nav>

@@ -119,20 +119,23 @@
         <div class="col-lg-12">
           <div class="car-search-filter-area">
             <div class="car-search-filter-form-area">
-              <form class="car-search-filter-form">
                 <div class="row justify-content-between">
-                  <div class="col-lg-4 col-md-5 col-sm-6">
+
                     <div class="cart-sort-field">
-                      <span class="caption">Sort by : </span>
-                      <form >
-                        <select name="sort" onchange="this.form.submit()" >
-                          <option th:each="prop : ${sortProperties}" th:value="${prop.value}" th:text="${prop.key}"></option>
-                        </select>
-                      </form>
+                      <span class="caption">Sort by :
+                      <a  th:href="@{/cars(pickUpDate=${#request.getParameter('pickUpDate')},
+                      pickUpTime=${#request.getParameter('pickUpTime')},
+                      dropOffDate=${#request.getParameter('dropOffDate')},
+                      dropOffTime=${#request.getParameter('dropOffTime')},
+                      sort='pricePerDay,asc')}" >Price per Day - ASC, </a>
+                      <a  th:href="@{/cars(pickUpDate=${#request.getParameter('pickUpDate')},
+                      pickUpTime=${#request.getParameter('pickUpTime')},
+                      dropOffDate=${#request.getParameter('dropOffDate')},
+                      dropOffTime=${#request.getParameter('dropOffTime')},
+                      sort='pricePerDay,desc')}" >Price per Day - DESC</a> </span>
                     </div>
-                  </div>
+
                 </div>
-              </form>
             </div>
             <div class="view-style-toggle-area">
               <button class="view-btn list-btn"><i class="fa fa-bars"></i></button>
@@ -168,7 +171,11 @@
           <nav class="d-pagination" aria-label="Page navigation example">
             <ul class="pagination justify-content-center" >
               <li th:if="${carsPage.totalPages > 0}" th:each="pageNumber : ${pageNumbers}"  th:class="${pageNumber==carsPage.number + 1} ? 'page-item active' : 'page-item'">
-                <a class="page-link" th:href="@{/cars(page=${pageNumber},sort=${param.sort})}" th:text=${pageNumber}></a>
+                <a class="page-link" th:href="@{/cars(page=${pageNumber},sort=${param.sort},
+                      pickUpDate=${#request.getParameter('pickUpDate')},
+                      pickUpTime=${#request.getParameter('pickUpTime')},
+                      dropOffDate=${#request.getParameter('dropOffDate')},
+                      dropOffTime=${#request.getParameter('dropOffTime')})}" th:text=${pageNumber}></a>
               </li>
             </ul>
           </nav>
@@ -180,36 +187,29 @@
               <div class="widget-body">
                 <form class="car-search-form">
                   <div class="row">
-                    <div class="col-lg-12 form-group">
-                      <select>
-                        <option value="1" selected>Choose Your Car Type</option>
-                        <option value="2">Another option</option>
-                        <option value="2">Another option</option>
-                        <option value="4">Potato</option>
-                      </select>
-                    </div>
                     <div class="form-group col-md-12">
                       <i class="fa fa-calendar"></i>
-                      <input type='text' class='form-control has-icon datepicker-here' data-language='en'
+                      <input type='text' name="pickUpDate" class='form-control has-icon datepicker-here' data-language='en'
                         placeholder="Pickup Date">
                     </div>
                     <div class="form-group col-md-12">
                       <i class="fa fa-clock-o"></i>
-                      <input type="text" name="timepicker" class="form-control has-icon timepicker"
+                      <input type="text" name="pickUpTime" class="form-control has-icon timepicker"
                         placeholder="Pickup Time">
                     </div>
                     <div class="form-group col-md-12">
                       <i class="fa fa-calendar"></i>
-                      <input type='text' class='form-control has-icon datepicker-here' data-language='en'
+                      <input type='text' name="dropOffDate" class='form-control has-icon datepicker-here' data-language='en'
                         placeholder="Drop Off Date">
                     </div>
                     <div class="form-group col-md-12">
                       <i class="fa fa-clock-o"></i>
-                      <input type="text" name="timepicker" class="form-control has-icon timepicker"
+                      <input type="text" name="dropOffTime" class="form-control has-icon timepicker"
                         placeholder="Drop Off Time">
                     </div>
                   </div>
                   <button type="submit" class="cmn-btn">Filter</button>
+                  <input type="button" class="cmn-btn"value="remove filter" onclick="location.href='/cars';"/>
                 </form>
               </div>
             </div><!-- widget end -->

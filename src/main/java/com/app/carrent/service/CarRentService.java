@@ -4,6 +4,8 @@ import com.app.carrent.model.Car;
 import com.app.carrent.model.CarRent;
 import com.app.carrent.repository.CarRentRepositoryInterface;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,5 +27,8 @@ public class CarRentService {
 
     public List<CarRent> findDateConflict(LocalDateTime pickUpDate, LocalDateTime dropOffDate, Car car){
         return carRentRepository.findDateConflict(pickUpDate,dropOffDate,car);
+    }
+    public Page<Car> findCarsNotReserved(LocalDateTime pickUp, LocalDateTime dropOff, Pageable pageRequest){
+        return carRentRepository.findCarsNotReserved(pickUp,dropOff,pageRequest);
     }
 }

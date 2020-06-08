@@ -11,8 +11,8 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.SortDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -49,13 +47,26 @@ public class CarRentController {
     }
 
     @GetMapping("/cars")
-    private ModelAndView cars(@RequestParam("page") Optional<Integer> page, Sort sort) throws NotFoundException {
+    private ModelAndView cars(@RequestParam("page") Optional<Integer> page,
+                              Sort sort,
+                              @RequestParam Optional<String> pickUpDate,
+                              @RequestParam Optional<String> pickUpTime,
+                              @RequestParam Optional<String> dropOffDate,
+                              @RequestParam Optional<String> dropOffTime) throws NotFoundException {
+
         ModelAndView modelAndView = new ModelAndView("car-list-one");
-        modelAndView.addObject("sortProperties", sortProperties());
 
         int currentPage = page.orElse(1);
-        PageRequest pageRequest = PageRequest.of(currentPage - 1, 4, sort);
+        Pageable pageRequest = PageRequest.of(currentPage - 1, 4, sort);
         Page<Car> carsPage = carService.findAll(pageRequest);
+
+        if (pickUpDate.isPresent() && pickUpTime.isPresent() && dropOffDate.isPresent() && dropOffTime.isPresent()) {
+            LocalDateTime pickUp = CarRentDateTimeParser.parseLocalDateTime(pickUpDate.get(), pickUpTime.get());
+            LocalDateTime dropOff = CarRentDateTimeParser.parseLocalDateTime(dropOffDate.get(), dropOffTime.get());
+            if (pickUp != null && dropOff != null) {
+                carsPage = carRentService.findCarsNotReserved(pickUp, dropOff, pageRequest);
+            }
+        }
 
         if (currentPage > carsPage.getTotalPages())
             throw new NotFoundException("Page not found");
@@ -70,14 +81,6 @@ public class CarRentController {
             modelAndView.addObject("pageNumbers", pageNumbers);
         }
         return modelAndView;
-    }
-
-    private Map<String, String> sortProperties() {
-        Map properties = new HashMap();
-        properties.put("Price per day - asc", "pricePerDay,asc");
-        properties.put("Price per day - dsc", "pricePerDay,desc");
-        return properties;
-
     }
 
     @GetMapping("/reservation")

@@ -25,7 +25,8 @@ public class User implements UserDetails {
     private String email;
     @Enumerated(EnumType.STRING)
     private Role role;
-    private boolean isEnable;
+    private boolean isEnabled;
+    private boolean isNonLocked = true;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -44,7 +45,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return isNonLocked;
     }
 
     @Override
@@ -54,7 +55,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return isEnable;
+        return isEnabled;
     }
 
     public enum Role{

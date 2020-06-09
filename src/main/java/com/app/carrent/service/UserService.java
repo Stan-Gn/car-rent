@@ -1,8 +1,11 @@
 package com.app.carrent.service;
 
+import com.app.carrent.model.Car;
 import com.app.carrent.model.User;
 import com.app.carrent.repository.UserRepositoryInterface;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +28,15 @@ public class UserService  {
     }
 
     public User saveUser(User user){
-        user.setEnable(true); //todo false -> when activation by e-mail
-        user.setRole(User.Role.USER);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
+    }
+    public Page<User> findAll(Pageable pageRequest) {
+        return userRepository.findAll(pageRequest);
+    }
+    public Optional<User>findById(Long id){
+        return userRepository.findById(id);
+    }
+    public void deleteUser(User user){
+        userRepository.delete(user);
     }
 }

@@ -1,5 +1,6 @@
 package com.app.carrent.controller;
 
+import com.app.carrent.controller.modelSaver.PageAndPageNumbersModelSaver;
 import com.app.carrent.controller.parser.CarRentDateTimeParser;
 import com.app.carrent.model.Car;
 import com.app.carrent.model.CarRent;
@@ -22,8 +23,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Controller
 public class CarRentController {
@@ -68,18 +67,9 @@ public class CarRentController {
             }
         }
 
-        if (currentPage > carsPage.getTotalPages())
-            throw new NotFoundException("Page not found");
+        PageAndPageNumbersModelSaver pageAndPageNumbersModelSaver = new PageAndPageNumbersModelSaver();
+        pageAndPageNumbersModelSaver.saveToModel(modelAndView,"carsPage",carsPage,currentPage);
 
-        modelAndView.addObject("carsPage", carsPage);
-
-        int totalPages = carsPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            modelAndView.addObject("pageNumbers", pageNumbers);
-        }
         return modelAndView;
     }
 

@@ -1,6 +1,5 @@
 package com.app.carrent.service;
 
-import com.app.carrent.model.Car;
 import com.app.carrent.model.User;
 import com.app.carrent.repository.UserRepositoryInterface;
 import org.springframework.beans.factory.annotation.Autowired;

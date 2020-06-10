@@ -7,27 +7,43 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Renten - Car Rental Service HTML Template</title>
   <!-- site favicon -->
-  <link rel="shortcut icon" type="image/png" href="assets/images/favicon.jpg" />
+  <link rel="shortcut icon" type="image/png" th:href="@{/assets/images/favicon.jpg}"/>
   <!-- fontawesome css link -->
-  <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+  <link rel="stylesheet" th:href="@{/assets/css/fontawesome.min.css}">
   <!-- bootstrap css link -->
-  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}">
   <!-- lightcase css link -->
-  <link rel="stylesheet" href="assets/css/lightcase.css">
+  <link rel="stylesheet" th:href="@{/assets/css/lightcase.css}">
   <!-- animate css link -->
-  <link rel="stylesheet" href="assets/css/animate.css">
+  <link rel="stylesheet" th:href="@{/assets/css/animate.css}">
   <!-- nice select css link -->
-  <link rel="stylesheet" href="assets/css/nice-select.css">
+  <link rel="stylesheet" th:href="@{/assets/css/nice-select.css}">
   <!-- datepicker css link -->
-  <link rel="stylesheet" href="assets/css/datepicker.min.css">
+  <link rel="stylesheet" th:href="@{/assets/css/datepicker.min.css}">
   <!-- wickedpicker css link -->
-  <link rel="stylesheet" href="assets/css/wickedpicker.min.css">
+  <link rel="stylesheet" th:href="@{/assets/css/wickedpicker.min.css}">
   <!-- jquery ui css link -->
-  <link rel="stylesheet" href="assets/css/jquery-ui.min.css">
+  <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.min.css}">
   <!-- owl carousel css link -->
-  <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
+  <link rel="stylesheet" th:href="@{/assets/css/owl.carousel.min.css}">
   <!-- main style css link -->
-  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}">
+  <!--===============================================================================================-->
+  <link rel="icon" type="image/png" th:href="@{/assets/table/images/icons/favicon.ico}"/>
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" th:href="@{/assets/table/vendor/bootstrap/css/bootstrap.min.css}">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" th:href="@{/assets/table/fonts/font-awesome-4.7.0/css/font-awesome.min.css}">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" th:href="@{/assets/table/vendor/animate/animate.css}">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" th:href="@{/assets/table/vendor/select2/select2.min.css}">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" th:href="@{/assets/table/vendor/perfect-scrollbar/perfect-scrollbar.css}">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" th:href="@{/assets/table/css/util.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/assets/table/css/main.css}">
+  <!--===============================================================================================-->
 </head>
 
 <body>
@@ -76,7 +92,7 @@
     <div class="header-bottom">
       <div class="container">
         <nav class="navbar navbar-expand-lg p-0">
-          <a class="site-logo site-title" href="/"><img src="assets/images/logo1.png" alt="site-logo"><span
+          <a class="site-logo site-title" href="/"><img th:src="@{/assets/images/logo1.png}" alt="site-logo"><span
                   class="logo-icon"><i class="flaticon-fire"></i></span></a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                   aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -96,7 +112,7 @@
   <!--  header-section end  -->
 
   <!-- inner-apge-banner start -->
-  <section class="inner-page-banner bg_img overlay-3" data-background="assets/images/inner-page-bg.jpg">
+  <section class="inner-page-banner bg_img overlay-3" th:data-background="@{/assets/images/inner-page-bg.jpg}">
     <div class="container">
       <div class="row">
         <div class="col-md-12">
@@ -122,7 +138,7 @@
           <div class="contact-item text-center" >
             <div class="icon"></div>
             <div class="content">
-              <a href="/user-list-admin"> <h4 class="title">User list</h4></a>
+              <a href="/admin/user-list-admin"> <h4 class="title">User list</h4></a>
             </div>
           </div>
         </div><!-- contact-item end -->
@@ -131,7 +147,7 @@
             <div class="icon"></div>
 
             <div class="content">
-              <a href="/car-rent-list-admin"> <h4 class="title">Car rent list</h4></a>
+              <a href="/admin/car-rent-list-admin"> <h4 class="title">Car rent list</h4></a>
             </div>
           </div>
         </div><!-- contact-item end -->
@@ -139,39 +155,75 @@
           <div class="contact-item text-center">
             <div class="icon"></div>
             <div class="content">
-              <a href="/car-list-admin"><h4 class="title">Car list</h4></a>
+              <a href="/admin/car-list-admin"><h4 class="title">Car list</h4></a>
             </div>
           </div>
         </div><!-- contact-item end -->
       </div>
+      <p class="car-rent-list-error" th:text="${carRentListAdminError}"></p>
       <div class="row">
-        <div class="col-lg-12">
-          <div class="contact-form-area">
-            <h3 class="title">send your messages</h3>
-            <form class="contact-form">
-              <div class="row">
-                <div class="col-lg-6">
-                  <div class="frm-group">
-                    <input type="text" name="contact_name" id="contact_name" placeholder="Name*">
-                  </div>
+        <div class="limiter">
+          <div class="container-table100">
+            <div class="wrap-table100">
+              <div class="table100 ver1 m-b-110">
+                <div class="table100-head">
+                  <table>
+                    <thead>
+                    <tr class="row100 head">
+                      <th class="cell100 column1CarRentList">ID</th>
+                      <th class="cell100 column2CarRentList">Car ID</th>
+                      <th class="cell100 column3CarRentList">User ID</th>
+                      <th class="cell100 column4CarRentList">Pick up date</th>
+                      <th class="cell100 column5CarRentList">Drop off date</th>
+                      <th class="cell100 column6CarRentList">Distance</th>
+                      <th class="cell100 column7CarRentList">Returned</th>
+                      <th class="cell100 column8CarRentList">Total price</th>
+                      <th class="cell100 column9CarRentList">Delete</th>
+                      <th class="cell100 column10CarRentList">Confirm</th>
+                    </tr>
+                    </thead>
+                  </table>
                 </div>
-                <div class="col-lg-6">
-                  <div class="frm-group">
-                    <input type="email" name="contact_email" id="contact_email" placeholder="Email*">
-                  </div>
-                </div>
-                <div class="col-lg-12">
-                  <div class="frm-group">
-                    <textarea placeholder="Write your comment"></textarea>
-                  </div>
-                </div>
-                <div class="col-lg-12">
-                  <div class="frm-group">
-                    <input type="submit" name="contact_submit" id="contact_submit" value="send your messages">
-                  </div>
+
+                <div class="table100-body js-pscroll">
+                  <table>
+                    <tbody>
+                    <tr class="row100 body" th:each="carRent : ${carRentPage}">
+                      <form method="get" action="/admin/car-rent-list-admin/confirm">
+                      <td class="cell100 column1CarRentList" th:text="${carRent.id}"></td>
+                      <td class="cell100 column2CarRentList" th:text="${carRent.car.id}"></td>
+                      <td class="cell100 column3CarRentList" th:text="${carRent.user.id}"></td>
+                      <td class="cell100 column4CarRentList" th:text="${carRent.pickUpDate}"></td>
+                      <td class="cell100 column5CarRentList" th:text="${carRent.dropOffDate}"></td>
+                      <td class="cell100 column6CarRentList" >
+                        <input name="distance" type="text" th:if="${!carRent.isReturned()}">
+                        <span th:unless="${!carRent.isReturned()}" th:text="${carRent.distance}"></span>
+                      </td>
+                      <td class="cell100 column7CarRentList" th:text="${carRent.isReturned()}">
+                      <td class="cell100 column8CarRentList" th:text="${carRent.totalPrice}"></td>
+                      <td class="cell100 column9CarRentList" >
+                        <a th:href="@{/admin/car-rent-list-admin/delete(id=${carRent.id})}">Delete</a>
+                      <td class="cell100 column10CarRentList">
+                        <input type="submit" value="Confirm" >
+                        <input type="hidden" name="id" th:value="${carRent.id}">
+                      </td>
+                      </form>
+                    </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
-            </form>
+
+              <div class="">
+                <ul class="pagination justify-content-center">
+                  <li th:if="${carRentPage.totalPages > 0}" th:each="pageNumber : ${pageNumbers}"
+                      th:class="${pageNumber==carRentPage.number + 1} ? 'page-item active' : 'page-item'">
+                    <a class="page-link" th:href="@{/admin/car-rent-list-admin(pageNumber=${pageNumber})}"
+                       th:text=${pageNumber}></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -187,7 +239,7 @@
           <div class="col-lg-4 col-sm-8">
             <div class="footer-widget widget-about">
               <div class="widget-about-content">
-                <a href="/" class="footer-logo"><img src="assets/images/logo-footer.png" alt="logo"></a>
+                <a href="/" class="footer-logo"><img th:src="@{/assets/images/logo-footer.png}" alt="logo"></a>
                 <p>Lorem ipsum dolor sit amet, congue placeranec. Leo faucibus sed eleifend bibendum n vehicula nulla
                   mauris nulla ipsum neque sed. Gravida egestas fermentum urna, velit sed. </p>
                 <ul class="social-links">
@@ -246,28 +298,49 @@
   <!-- scroll-to-top end -->
 
   <!-- jquery js link -->
-  <script src="assets/js/jquery-3.3.1.min.js"></script>
+  <script th:src="@{/assets/js/jquery-3.3.1.min.js}"></script>
   <!-- jquery migrate js link -->
-  <script src="assets/js/jquery-migrate-3.0.0.js"></script>
+  <script th:src="@{/assets/js/jquery-migrate-3.0.0.js}"></script>
   <!-- bootstrap js link -->
-  <script src="assets/js/bootstrap.min.js"></script>
+  <script th:src="@{/assets/js/bootstrap.min.js}"></script>
   <!-- lightcase js link -->
-  <script src="assets/js/lightcase.js"></script>
+  <script th:src="@{/assets/js/lightcase.js}"></script>
   <!-- wow js link -->
-  <script src="assets/js/wow.min.js"></script>
+  <script th:src="@{/assets/js/wow.min.js}"></script>
   <!-- nice select js link -->
-  <script src="assets/js/jquery.nice-select.min.js"></script>
+  <script th:src="@{/assets/js/jquery.nice-select.min.js}"></script>
   <!-- datepicker js link -->
-  <script src="assets/js/datepicker.min.js"></script>
-  <script src="assets/js/datepicker.en.js"></script>
+  <script th:src="@{/assets/js/datepicker.min.js}"></script>
+  <script th:src="@{/assets/js/datepicker.en.js}"></script>
   <!-- wickedpicker js link -->
-  <script src="assets/js/wickedpicker.min.js"></script>
+  <script th:src="@{/assets/js/wickedpicker.min.js}"></script>
   <!-- owl carousel js link -->
-  <script src="assets/js/owl.carousel.min.js"></script>
+  <script th:src="@{/assets/js/owl.carousel.min.js}"></script>
   <!-- jquery ui js link -->
-  <script src="assets/js/jquery-ui.min.js"></script>
+  <script th:src="@{/assets/js/jquery-ui.min.js}"></script>
   <!-- main js link -->
-  <script src="assets/js/main.js"></script>
+  <script th:src="@{/assets/js/main.js}"></script>
+
+  <!--===============================================================================================-->
+  <script th:src="@{/assets/table/vendor/jquery/jquery-3.2.1.min.js}"></script>
+  <!--===============================================================================================-->
+  <script th:src="@{/assets/table/vendor/bootstrap/js/popper.js}"></script>
+  <script th:src="@{/assets/table/vendor/bootstrap/js/bootstrap.min.js}"></script>
+  <!--===============================================================================================-->
+  <script th:src="@{/assets/table/vendor/select2/select2.min.js}"></script>
+  <!--===============================================================================================-->
+  <script th:src="@{/assets/table/vendor/perfect-scrollbar/perfect-scrollbar.min.js}"></script>
+  <script>
+    $('.js-pscroll').each(function () {
+      var ps = new PerfectScrollbar(this);
+
+      $(window).on('resize', function () {
+        ps.update();
+      })
+    });
+  </script>
+  <!--===============================================================================================-->
+  <script th:src="@{/assets/table/js/main.js}"></script>
 </body>
 
 </html>

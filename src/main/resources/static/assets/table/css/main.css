@@ -134,6 +134,11 @@ iframe {
   width: 1366px;
 
 }
+.car-rent-list-error{
+  font-size: 20px;
+  padding-top: 30px;
+  color: red;
+}
 
 .container-table100 {
   width: 100%;
@@ -149,7 +154,7 @@ iframe {
   justify-content: center;
   flex-wrap: wrap;
   padding: 0px ;
-  margin-top: 50px;
+  margin-top: 30px;
 }
 
 .wrap-table100 {
@@ -171,33 +176,69 @@ th, td {
   padding-right: 10px;
 }
 
-.column1 {
+.column1UserList {
   width: 10%;
   padding-left: 40px;
 }
 
-.column2 {
+.column2UserList {
   width: 20%;
 }
 
-.column3 {
+.column3UserList {
   width: 20%;
 }
 
-.column4 {
+.column4UserList {
   width: 22%;
 }
 
-.column5 {
+.column5UserList {
   width: 9%;
 }
-.column6 {
+.column6UserList {
   width: 9%;
 }
-.column7 {
+.column7UserList {
   width: 10%;
 }
 
+.column1CarRentList {
+  width: 5%;
+  padding-left: 40px;
+}
+
+.column2CarRentList {
+  width: 7%;
+}
+
+.column3CarRentList {
+  width: 7%;
+}
+
+.column4CarRentList {
+  width: 13%;
+}
+
+.column5CarRentList {
+  width: 13%;
+}
+.column6CarRentList {
+  width: 8%;
+}
+.column7CarRentList {
+  width: 8%;
+}
+.column8CarRentList {
+  width: 11%;
+}
+.column9CarRentList {
+  width: 8%;
+}
+
+.column10CarRentList {
+  width: 8%;
+}
 .table100-head th {
   padding-top: 18px;
   padding-bottom: 18px;
@@ -401,7 +442,7 @@ th, td {
   border-bottom: 2px solid #f2f2f2;
 }
 
-.table100.ver4 .column1 {
+.table100.ver4 .column1UserList {
   padding-left: 7px;
 }
 

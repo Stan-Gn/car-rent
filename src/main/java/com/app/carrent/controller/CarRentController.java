@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,9 +65,10 @@ public class CarRentController {
                 carsPage = carRentService.findCarsNotReserved(pickUp, dropOff, pageRequest);
             }
         }
-
-        PageAndPageNumbersModelSaver pageAndPageNumbersModelSaver = new PageAndPageNumbersModelSaver();
-        pageAndPageNumbersModelSaver.saveToModel(modelAndView,"carsPage",carsPage,currentPage);
+        if(carsPage.getTotalPages()>0) {
+            PageAndPageNumbersModelSaver pageAndPageNumbersModelSaver = new PageAndPageNumbersModelSaver();
+            pageAndPageNumbersModelSaver.saveToModel(modelAndView, "carsPage", carsPage, currentPage);
+        }
 
         return modelAndView;
     }
@@ -173,15 +173,5 @@ public class CarRentController {
         return false;
     }
 
-    private LocalDateTime parseLocalDateTime(@RequestParam String pickUpDate, @RequestParam String pickUpTime, ModelAndView modelAndView) {
-        LocalDateTime localDateTime = null;
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy h : m a");
-            localDateTime = LocalDateTime.parse(pickUpDate + " " + pickUpTime, formatter);
-        } catch (Exception e) {
-
-        }
-        return localDateTime;
-    }
 
 }

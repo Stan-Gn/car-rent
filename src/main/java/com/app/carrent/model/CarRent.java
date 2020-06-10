@@ -3,6 +3,7 @@ package com.app.carrent.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,8 +14,9 @@ public class CarRent {
     private long id;
     private LocalDateTime pickUpDate;
     private LocalDateTime dropOffDate;
-    private double totalPrice;
-    private boolean isReturned;
+    private BigDecimal totalPrice;
+    private double distance;
+    private boolean isReturned = false;
     @ManyToOne
     private User user;
     @OneToOne

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CarRentService {
@@ -30,5 +31,17 @@ public class CarRentService {
     }
     public Page<Car> findCarsNotReserved(LocalDateTime pickUp, LocalDateTime dropOff, Pageable pageRequest){
         return carRentRepository.findCarsNotReserved(pickUp,dropOff,pageRequest);
+    }
+
+    public Page<CarRent> findAll(Pageable pageRequest) {
+        return carRentRepository.findAll(pageRequest);
+    }
+
+    public Optional<CarRent> findById(Long id) {
+        return carRentRepository.findById(id);
+    }
+
+    public void delete(CarRent carRent){
+        carRentRepository.delete(carRent);
     }
 }

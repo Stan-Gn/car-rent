@@ -35,7 +35,8 @@ public class AdminController {
 
 
     @Autowired
-    public AdminController(UserService userService, CarRentService carRentService, CarService carService, CarImageServiceInterface imageService) {
+    public AdminController(UserService userService, CarRentService carRentService, CarService carService,
+                           CarImageServiceInterface imageService) {
         this.userService = userService;
         this.carRentService = carRentService;
         this.carService = carService;
@@ -51,6 +52,12 @@ public class AdminController {
     public ModelAndView userList(@RequestParam Optional<Integer> pageNumber) throws NotFoundException {
         ModelAndView modelAndView = new ModelAndView("user-list-adm");
 
+        displayingListOfCarsInAdminPanel(pageNumber, modelAndView);
+
+        return modelAndView;
+    }
+
+    private void displayingListOfCarsInAdminPanel(@RequestParam Optional<Integer> pageNumber, ModelAndView modelAndView) throws NotFoundException {
         pageNumber.orElse(1);
         int currentPage = pageNumber.orElse(1);
         Pageable pageRequest = PageRequest.of(currentPage - 1, 5);
@@ -61,26 +68,15 @@ public class AdminController {
             PageAndPageNumbersModelSaver pageAndPageNumbersModelSaver = new PageAndPageNumbersModelSaver();
             pageAndPageNumbersModelSaver.saveToModel(modelAndView, "usersPage", usersPage, currentPage);
         }
-
-        return modelAndView;
     }
 
     @GetMapping("/admin/user-list-admin/{action}")
-    public ModelAndView userList(@PathVariable(value = "action") String action,
-                                 @RequestParam(value = "id") Long id) {
+    public ModelAndView userListAction(@PathVariable(value = "action") String action,
+                                       @RequestParam(value = "id") Long id) {
         ModelAndView modelAndView = new ModelAndView("redirect:/admin/user-list-admin");
         Optional<User> userOptional = userService.findById(id);
         if (userOptional.isPresent()) {
-            switch (action) {
-                case "remove":
-                    userService.deleteUser(userOptional.get());
-                    break;
-                case "changeLockedStatus":
-                    User u = userOptional.get();
-                    u.setNonLocked(!u.isNonLocked());
-                    userService.saveUser(u);
-                    break;
-            }
+            actionOnUserInAdminPanel(action, userOptional);
         } else {
             modelAndView = new ModelAndView("forward:/admin/user-list-admin");
             modelAndView.addObject("userListAdminError", "Failed to find user with given id");
@@ -89,10 +85,29 @@ public class AdminController {
         return modelAndView;
     }
 
+    private void actionOnUserInAdminPanel(@PathVariable("action") String action, Optional<User> userOptional) {
+        switch (action) {
+            case "remove":
+                userService.deleteUser(userOptional.get());
+                break;
+            case "changeLockedStatus":
+                User u = userOptional.get();
+                u.setNonLocked(!u.isNonLocked());
+                userService.saveUser(u);
+                break;
+        }
+    }
+
     @GetMapping("/admin/car-rent-list-admin")
     public ModelAndView carRentList(@RequestParam Optional<Integer> pageNumber) throws NotFoundException {
         ModelAndView modelAndView = new ModelAndView("car-rent-list-adm");
 
+        displayingListOfRentals(pageNumber, modelAndView);
+
+        return modelAndView;
+    }
+
+    private void displayingListOfRentals(@RequestParam Optional<Integer> pageNumber, ModelAndView modelAndView) throws NotFoundException {
         pageNumber.orElse(1);
         int currentPage = pageNumber.orElse(1);
         Pageable pageRequest = PageRequest.of(currentPage - 1, 5);
@@ -102,45 +117,18 @@ public class AdminController {
             PageAndPageNumbersModelSaver pageAndPageNumbersModelSaver = new PageAndPageNumbersModelSaver();
             pageAndPageNumbersModelSaver.saveToModel(modelAndView, "carRentPage", carRentPage, currentPage);
         }
-        return modelAndView;
     }
 
     @GetMapping("/admin/car-rent-list-admin/{action}")
-    public ModelAndView carRentList(@PathVariable(value = "action") String action,
-                                    @RequestParam(value = "id") Long id,
-                                    @RequestParam(value = "distance", required = false) Optional<String> distanceOptional) {
+    public ModelAndView carRentListAction(@PathVariable(value = "action") String action,
+                                          @RequestParam(value = "id") Long id,
+                                          @RequestParam(value = "distance", required = false) Optional<String> distanceOptional) {
         ModelAndView modelAndView = new ModelAndView("forward:/admin/car-rent-list-admin");
+
         Optional<CarRent> carRentOptional = carRentService.findById(id);
         if (carRentOptional.isPresent()) {
-            switch (action) {
-                case "delete":
-                    carRentService.delete(carRentOptional.get());
-                    break;
-                case "confirm":
-                    CarRent carRent = carRentOptional.get();
-                    if (carRent.isReturned()) {
-                        modelAndView.addObject("carRentListAdminError", "The car has been returned");
-                        return modelAndView;
-                    } else if (!distanceOptional.isPresent() || getDoubleDistanceFromString(distanceOptional) == null) {
-                        modelAndView.addObject("carRentListAdminError", "Invalid distance value");
-                        return modelAndView;
-                    } else {
-                        if (LocalDateTime.now().isAfter(carRent.getDropOffDate())) {
-                            carRent.setDropOffDate(LocalDateTime.now());
-                        }
-                        double distance = getDoubleDistanceFromString(distanceOptional);
-                        double days = ChronoUnit.HOURS.between(carRent.getPickUpDate(), carRent.getDropOffDate()) / 24.0;
-                        double pricePerDay = carRent.getCar().getPricePerDay();
-                        double pricePerKM = carRent.getCar().getPricePerKm();
-
-                        BigDecimal totalPrice = BigDecimal.valueOf(days * pricePerDay + distance * pricePerKM).setScale(2, BigDecimal.ROUND_HALF_UP);
-                        carRent.setDistance(distance);
-                        carRent.setTotalPrice(totalPrice);
-                        carRent.setReturned(true);
-                        carRentService.save(carRent);
-                    }
-                    break;
-            }
+            ModelAndView model = actionOnRentItem(action, distanceOptional, modelAndView, carRentOptional);
+            if (model != null) return model;
         } else {
             modelAndView.addObject("carRentListAdminError", "Failed to find user with given id");
         }
@@ -148,10 +136,61 @@ public class AdminController {
         return modelAndView;
     }
 
+    private ModelAndView actionOnRentItem(@PathVariable("action") String action, @RequestParam(value = "distance", required = false) Optional<String> distanceOptional, ModelAndView modelAndView, Optional<CarRent> carRentOptional) {
+        switch (action) {
+            case "delete":
+                carRentService.delete(carRentOptional.get());
+                break;
+            case "confirm":
+                CarRent carRent = carRentOptional.get();
+                if (carRent.isReturned()) {
+                    modelAndView.addObject("carRentListAdminError", "The car has been returned");
+                    return modelAndView;
+                } else if (distanceIsIncorrect(distanceOptional)) {
+                    modelAndView.addObject("carRentListAdminError", "Invalid distance value");
+                    return modelAndView;
+                } else {
+                    setReturnDateIfIsEarlierThanCurrentDate(carRent);
+                    calculationOfTotalAmountDue(distanceOptional, carRent);
+                    carRentService.save(carRent);
+                }
+                break;
+        }
+        return null;
+    }
+
+    private void calculationOfTotalAmountDue(@RequestParam(value = "distance", required = false) Optional<String> distanceOptional, CarRent carRent) {
+        double distance = getDoubleDistanceFromString(distanceOptional);
+        double days = ChronoUnit.HOURS.between(carRent.getPickUpDate(), carRent.getDropOffDate()) / 24.0;
+        double pricePerDay = carRent.getCar().getPricePerDay();
+        double pricePerKM = carRent.getCar().getPricePerKm();
+
+        BigDecimal totalPrice = BigDecimal.valueOf(days * pricePerDay + distance * pricePerKM).setScale(2, BigDecimal.ROUND_HALF_UP);
+        carRent.setDistance(distance);
+        carRent.setTotalPrice(totalPrice);
+        carRent.setReturned(true);
+    }
+
+    private void setReturnDateIfIsEarlierThanCurrentDate(CarRent carRent) {
+        if (LocalDateTime.now().isAfter(carRent.getDropOffDate())) {
+            carRent.setDropOffDate(LocalDateTime.now());
+        }
+    }
+
+    private boolean distanceIsIncorrect(@RequestParam(value = "distance", required = false) Optional<String> distanceOptional) {
+        return !distanceOptional.isPresent() || getDoubleDistanceFromString(distanceOptional) == null;
+    }
+
     @GetMapping("/admin/car-list-admin")
     public ModelAndView carList(@RequestParam Optional<Integer> pageNumber) throws NotFoundException {
         ModelAndView modelAndView = new ModelAndView("car-list-adm");
 
+        displayCarItemsInPanelAdmin(pageNumber, modelAndView);
+
+        return modelAndView;
+    }
+
+    private void displayCarItemsInPanelAdmin(@RequestParam Optional<Integer> pageNumber, ModelAndView modelAndView) throws NotFoundException {
         pageNumber.orElse(1);
         int currentPage = pageNumber.orElse(1);
         Pageable pageRequest = PageRequest.of(currentPage - 1, 5);
@@ -162,7 +201,6 @@ public class AdminController {
             PageAndPageNumbersModelSaver pageAndPageNumbersModelSaver = new PageAndPageNumbersModelSaver();
             pageAndPageNumbersModelSaver.saveToModel(modelAndView, "carsPage", carsPage, currentPage);
         }
-        return modelAndView;
     }
 
     @GetMapping("/admin/car-list-admin/{action}")
@@ -170,20 +208,25 @@ public class AdminController {
                                 @RequestParam(value = "id") long id) {
         ModelAndView modelAndView = new ModelAndView("redirect:/admin/car-list-admin");
 
+
         Optional<Car> carOptional = carService.findCarById(id);
         if (carOptional.isPresent()) {
-            switch (action) {
-                case "remove":
-                    Car car = carOptional.get();
-                    carService.delete(car);
-                    break;
-            }
+            actionOnCarItem(action, carOptional);
         } else {
             modelAndView = new ModelAndView("forward:/admin/car-list-admin");
             modelAndView.addObject("carListAdminError", "Car with given id does not exist");
         }
 
         return modelAndView;
+    }
+
+    private void actionOnCarItem(@PathVariable("action") String action, Optional<Car> carOptional) {
+        switch (action) {
+            case "remove":
+                Car car = carOptional.get();
+                carService.delete(car);
+                break;
+        }
     }
 
     @GetMapping("/admin/car-list-admin/addCar")
@@ -197,18 +240,21 @@ public class AdminController {
     public ModelAndView addCar(@ModelAttribute(value = "car") @Valid Car car, Errors errors,
                                @RequestParam(value = "file") MultipartFile file) {
         ModelAndView modelAndView = new ModelAndView("addNewCar");
+
         if (errors.hasErrors()) {
             modelAndView.addObject("addCarError", errors);
             return modelAndView;
         }
+
         carService.save(car);
         boolean savedCarImage = imageService.save(file, car);
+
         if (!savedCarImage) {
             modelAndView.addObject("addCarImageError", "Failed to save the image");
             return modelAndView;
         }
 
-        modelAndView.addObject("success","Correctly added car");
+        modelAndView.addObject("success", "Correctly added car");
 
         return modelAndView;
     }

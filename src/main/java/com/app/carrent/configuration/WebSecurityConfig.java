@@ -1,6 +1,7 @@
 package com.app.carrent.configuration;
 
 import com.app.carrent.AuthenticationComponent.SimpleAuthenticationSuccessHandler;
+import com.app.carrent.model.User;
 import com.app.carrent.service.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().disable();
         http.authorizeRequests()
                 .antMatchers("/reservation/**").authenticated()
+                .antMatchers("/admin/**").hasRole(User.Role.ADMIN.toString())
                 .and()
                 .formLogin().loginPage("/login")
                 .failureUrl("/login?error")

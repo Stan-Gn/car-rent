@@ -2,11 +2,13 @@ package com.app.carrent.model;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Collection;
+import java.util.Collections;
 
 
 @Entity
@@ -30,7 +32,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.singleton(new SimpleGrantedAuthority(role.getRole()));
     }
 
     @Override
@@ -58,7 +60,17 @@ public class User implements UserDetails {
         return isEnabled;
     }
 
+
     public enum Role{
-        ADMIN, USER;
+        ADMIN("ROLE_ADMIN"),USER("ROLE_USER");
+
+        Role(String role) {
+            this.role = role;
+        }
+        String role;
+
+        public String getRole() {
+            return role;
+        }
     }
 }

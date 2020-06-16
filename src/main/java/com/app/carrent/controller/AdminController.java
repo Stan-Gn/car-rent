@@ -1,37 +1,45 @@
 package com.app.carrent.controller;
 
 import com.app.carrent.controller.modelSaver.PageAndPageNumbersModelSaver;
-import com.app.carrent.dataLoader.CarRentLoader;
+import com.app.carrent.model.Car;
 import com.app.carrent.model.CarRent;
 import com.app.carrent.model.User;
-import com.app.carrent.service.CarRentService;
-import com.app.carrent.service.UserService;
+import com.app.carrent.service.*;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Optional;
+
 
 @Controller
 public class AdminController {
 
     private UserService userService;
     private CarRentService carRentService;
+    private CarService carService;
+    private CarImageServiceInterface imageService;
+
 
     @Autowired
-    public AdminController(UserService userService, CarRentService carRentService) {
+    public AdminController(UserService userService, CarRentService carRentService, CarService carService, CarImageServiceInterface imageService) {
         this.userService = userService;
         this.carRentService = carRentService;
+        this.carService = carService;
+        this.imageService = imageService;
     }
 
     @GetMapping("/admin")
@@ -59,7 +67,7 @@ public class AdminController {
 
     @GetMapping("/admin/user-list-admin/{action}")
     public ModelAndView userList(@PathVariable(value = "action") String action,
-                           @RequestParam(value = "id") Long id) {
+                                 @RequestParam(value = "id") Long id) {
         ModelAndView modelAndView = new ModelAndView("redirect:/admin/user-list-admin");
         Optional<User> userOptional = userService.findById(id);
         if (userOptional.isPresent()) {
@@ -73,7 +81,7 @@ public class AdminController {
                     userService.saveUser(u);
                     break;
             }
-        }else{
+        } else {
             modelAndView = new ModelAndView("forward:/admin/user-list-admin");
             modelAndView.addObject("userListAdminError", "Failed to find user with given id");
         }
@@ -133,17 +141,81 @@ public class AdminController {
                     }
                     break;
             }
-        }else{
-            modelAndView.addObject("carRentListAdminError","Failed to find user with given id");
+        } else {
+            modelAndView.addObject("carRentListAdminError", "Failed to find user with given id");
         }
 
         return modelAndView;
     }
 
-    @GetMapping("admin/car-list-admin")
-    public ModelAndView carList() {
+    @GetMapping("/admin/car-list-admin")
+    public ModelAndView carList(@RequestParam Optional<Integer> pageNumber) throws NotFoundException {
         ModelAndView modelAndView = new ModelAndView("car-list-adm");
+
+        pageNumber.orElse(1);
+        int currentPage = pageNumber.orElse(1);
+        Pageable pageRequest = PageRequest.of(currentPage - 1, 5);
+        Page<Car> carsPage = carService.findAll(pageRequest);
+
+        if (carsPage.getTotalPages() > 0) {
+            modelAndView.addObject("carsPage", carsPage);
+            PageAndPageNumbersModelSaver pageAndPageNumbersModelSaver = new PageAndPageNumbersModelSaver();
+            pageAndPageNumbersModelSaver.saveToModel(modelAndView, "carsPage", carsPage, currentPage);
+        }
         return modelAndView;
+    }
+
+    @GetMapping("/admin/car-list-admin/{action}")
+    public ModelAndView carList(@PathVariable(value = "action") String action,
+                                @RequestParam(value = "id") long id) {
+        ModelAndView modelAndView = new ModelAndView("redirect:/admin/car-list-admin");
+
+        Optional<Car> carOptional = carService.findCarById(id);
+        if (carOptional.isPresent()) {
+            switch (action) {
+                case "remove":
+                    Car car = carOptional.get();
+                    carService.delete(car);
+                    break;
+            }
+        } else {
+            modelAndView = new ModelAndView("forward:/admin/car-list-admin");
+            modelAndView.addObject("carListAdminError", "Car with given id does not exist");
+        }
+
+        return modelAndView;
+    }
+
+    @GetMapping("/admin/car-list-admin/addCar")
+    public ModelAndView addCar() {
+        ModelAndView modelAndView = new ModelAndView("addNewCar");
+        modelAndView.addObject("car", new Car());
+        return modelAndView;
+    }
+
+    @PostMapping("/admin/car-list-admin/addCar")
+    public ModelAndView addCar(@ModelAttribute(value = "car") @Valid Car car, Errors errors,
+                               @RequestParam(value = "file") MultipartFile file) {
+        ModelAndView modelAndView = new ModelAndView("addNewCar");
+        if (errors.hasErrors()) {
+            modelAndView.addObject("addCarError", errors);
+            return modelAndView;
+        }
+        carService.save(car);
+        boolean savedCarImage = imageService.save(file, car);
+        if (!savedCarImage) {
+            modelAndView.addObject("addCarImageError", "Failed to save the image");
+            return modelAndView;
+        }
+
+        modelAndView.addObject("success","Correctly added car");
+
+        return modelAndView;
+    }
+
+    @ModelAttribute("carTypeList")
+    public void carTypeLis(Model model) {
+        model.addAttribute(Arrays.asList(Car.CarType.values()));
     }
 
     private Double getDoubleDistanceFromString(Optional<String> distance) {

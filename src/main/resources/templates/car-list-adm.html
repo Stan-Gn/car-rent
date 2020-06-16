@@ -160,34 +160,61 @@
           </div>
         </div><!-- contact-item end -->
       </div>
+      <p class="car-rent-list-error" th:text="${carListAdminError}"></p>
       <div class="row">
-        <div class="col-lg-12">
-          <div class="contact-form-area">
-            <h3 class="title">send your messages</h3>
-            <form class="contact-form">
-              <div class="row">
-                <div class="col-lg-6">
-                  <div class="frm-group">
-                    <input type="text" name="contact_name" id="contact_name" placeholder="Name*">
-                  </div>
+        <div class="limiter">
+          <div class="container-table100">
+            <div class="wrap-table100">
+              <div class="table100 ver1 m-b-110">
+                <div class="table100-head">
+                  <table>
+                    <thead>
+                    <tr class="row100 head">
+                      <th class="cell100 column1CarList">ID</th>
+                      <th class="cell100 column2CarList">Mark</th>
+                      <th class="cell100 column3CarList">Model</th>
+                      <th class="cell100 column4CarList">Year</th>
+                      <th class="cell100 column5CarList">Type</th>
+                      <th class="cell100 column6CarList">Description</th>
+                      <th class="cell100 column7CarList">Price/Day</th>
+                      <th class="cell100 column8CarList">Price/KM</th>
+                      <th class="cell100 column9CarList">Remove</th>
+                    </tr>
+                    </thead>
+                  </table>
                 </div>
-                <div class="col-lg-6">
-                  <div class="frm-group">
-                    <input type="email" name="contact_email" id="contact_email" placeholder="Email*">
-                  </div>
-                </div>
-                <div class="col-lg-12">
-                  <div class="frm-group">
-                    <textarea placeholder="Write your comment"></textarea>
-                  </div>
-                </div>
-                <div class="col-lg-12">
-                  <div class="frm-group">
-                    <input type="submit" name="contact_submit" id="contact_submit" value="send your messages">
-                  </div>
+
+                <div class="table100-body js-pscroll">
+                  <table>
+                    <tbody>
+                    <tr class="row100 body" th:each="car : ${carsPage}">
+                      <td class="cell100 column1CarList" th:text="${car.id}"></td>
+                      <td class="cell100 column2CarList" th:text="${car.mark}"></td>
+                      <td class="cell100 column3CarList" th:text="${car.model}"></td>
+                      <td class="cell100 column4CarList" th:text="${car.year}"></td>
+                      <td class="cell100 column5CarList" th:text="${car.carType}"></td>
+                      <td class="cell100 column6CarList" th:text="${car.description}"></td>
+                      <td class="cell100 column7CarList" th:text="${car.pricePerDay}"></td>
+                      <td class="cell100 column8CarList" th:text="${car.pricePerKm}"></td>
+                      <td class="cell100 column9CarList">
+                        <a th:href="@{/admin/car-list-admin/remove(id=${car.id})}">Remove</a>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
-            </form>
+             <a href="/admin/car-list-admin/addCar"> <input type="button" class="addCarButton"  value="Add new car"></a>
+              <div class="">
+                <ul class="pagination justify-content-center">
+                  <li th:if="${carsPage.totalPages > 0}" th:each="pageNumber : ${pageNumbers}"
+                      th:class="${pageNumber==carsPage.number + 1} ? 'page-item active' : 'page-item'">
+                    <a class="page-link" th:href="@{/admin/car-list-admin(pageNumber=${pageNumber})}"
+                       th:text=${pageNumber}></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>

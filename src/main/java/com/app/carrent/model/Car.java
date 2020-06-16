@@ -5,7 +5,9 @@ import lombok.Data;
 
 
 import javax.persistence.*;
-import java.util.List;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
@@ -14,17 +16,44 @@ public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
+    @NotBlank(message = "Mark field cannot be empty")
     private String mark;
+
+    @NotBlank(message = "Mark field cannot be empty")
     private String model;
+
     private int year;
+
+    @NotNull(message = "Type field cannot be empty")
     private CarType carType;
+
+    @NotBlank (message = "Description field cannot be empty")
     private String description;
+
+    @Min(value = 0,message = "The value should be greater than zero")
     private double pricePerDay;
+
+    @Min(value = 0,message = "The value should be greater than zero")
     private double pricePerKm;
 
+    public Car(String mark, String model, CarType type, double ppd, double ppkm, String desc, int year) {
+        this.mark = mark;
+        this.model = model;
+        this.carType = type;
+        this.pricePerDay = ppd;
+        this.pricePerKm = ppkm;
+        this.description = desc;
+        this.year = year;
+    }
 
     public enum CarType {
-        KOMBI, COUPE, SEDAN, SUV, HATCHBACK
+        KOMBI(1), COUPE(2), SEDAN(3), SUV(4), HATCHBACK(5);
+        int id;
+
+        CarType(int id) {
+            this.id = id;
+        }
     }
 
     public Car() {

@@ -4215,6 +4215,11 @@ input[type=checkbox]:checked+label:before {
     text-align: left;
     position: absolute;
 }
+.success{
+    color: green;
+    text-align: left;
+    position: absolute;
+}
 .reg-error-email{
     color: red;
 }

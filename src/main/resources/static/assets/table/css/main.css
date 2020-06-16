@@ -175,7 +175,7 @@ th, td {
   font-weight: unset;
   padding-right: 10px;
 }
-
+/*----------------------------------*/
 .column1UserList {
   width: 10%;
   padding-left: 40px;
@@ -202,7 +202,7 @@ th, td {
 .column7UserList {
   width: 10%;
 }
-
+/*----------------------------------*/
 .column1CarRentList {
   width: 5%;
   padding-left: 40px;
@@ -219,7 +219,6 @@ th, td {
 .column4CarRentList {
   width: 13%;
 }
-
 .column5CarRentList {
   width: 13%;
 }
@@ -239,6 +238,40 @@ th, td {
 .column10CarRentList {
   width: 8%;
 }
+/*----------------------------------*/
+.column1CarList {
+  width: 5%;
+  padding-left: 40px;
+}
+
+.column2CarList {
+  width: 12%;
+}
+
+.column3CarList {
+  width: 12%;
+}
+
+.column4CarList {
+  width: 10%;
+}
+
+.column5CarList {
+  width: 10%;
+}
+.column6CarList {
+  width: 19%;
+}
+.column7CarList {
+  width: 10%;
+}
+.column8CarList {
+  width: 10%;
+}
+.column9CarList {
+  width: 10%;
+}
+
 .table100-head th {
   padding-top: 18px;
   padding-bottom: 18px;

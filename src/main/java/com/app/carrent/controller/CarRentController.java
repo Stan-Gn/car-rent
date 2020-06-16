@@ -76,7 +76,13 @@ public class CarRentController {
     @GetMapping("/reservation")
     public ModelAndView reservation(@RequestParam long id) {
         ModelAndView modelAndView = new ModelAndView("reservation");
-        modelAndView.addObject("carToRent", carService.findCarById(id));
+        Optional<Car> carOptional = carService.findCarById(id);
+
+        if(carOptional.isPresent())
+        modelAndView.addObject("carToRent", carOptional.get());
+        else {
+            modelAndView.addObject("reservationError", "Car with given id does not exist");
+        }
         return modelAndView;
     }
 
@@ -88,7 +94,13 @@ public class CarRentController {
                                     @RequestParam String dropOffTime,
                                     Authentication auth) {
         ModelAndView modelAndView = new ModelAndView("reservation");
-        modelAndView.addObject("carToRent", carService.findCarById(id));
+        Optional<Car> carOptional = carService.findCarById(id);
+
+        if(!carOptional.isPresent()){
+            return modelAndView.addObject("reservationError", "Car with given id does not exist");
+        }
+
+        modelAndView.addObject("carToRent", carService.findCarById(id).get());
 
         if (checkingIfDateTimeFieldsAreEmpty(pickUpDate, pickUpTime, dropOffDate, dropOffTime, modelAndView))
             return modelAndView;
@@ -96,8 +108,9 @@ public class CarRentController {
         LocalDateTime pickUp = CarRentDateTimeParser.parseLocalDateTime(pickUpDate, pickUpTime);
         LocalDateTime dropOff = CarRentDateTimeParser.parseLocalDateTime(dropOffDate, dropOffTime);
 
-        if (pickUp == null || dropOff == null)
+        if (pickUp == null || dropOff == null) {
             return modelAndView.addObject("reservationError", "Invalid date format");
+        }
 
         if (checkingIfPickUpDateIsAfterDropOffDate(pickUp, dropOff, modelAndView))
             return modelAndView;
@@ -105,7 +118,7 @@ public class CarRentController {
         if (checkingIfPickUpDateIsBeforeNow(pickUp, modelAndView))
             return modelAndView;
 
-        Car car = carService.findCarById(id);
+        Car car = carOptional.get();
         List<CarRent> dateConflictCarRentList = carRentService.findDateConflict(pickUp, dropOff, car);
 
         if (checkingDateConflicts(dateConflictCarRentList, modelAndView))

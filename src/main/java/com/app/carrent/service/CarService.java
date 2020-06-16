@@ -28,14 +28,20 @@ public class CarService {
     public List<Car> findAll() {
         return carRepository.findAll();
     }
+
     public Page<Car> findAll(Pageable pageRequest) {
         return carRepository.findAll(pageRequest);
     }
 
-    public Car findCarById(long id) {
-        //todo exception handling
-        Optional<Car> car = carRepository.findById(id);
-        return car.get();
+    public Optional<Car> findCarById(long id) {
+        return carRepository.findById(id);
     }
 
+    public void delete(Car car) {
+        carRepository.delete(car);
+    }
+
+    public Car save(Car car) {
+        return carRepository.save(car);
+    }
 }

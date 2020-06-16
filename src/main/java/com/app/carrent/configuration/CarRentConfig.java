@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 @Configuration
 public class CarRentConfig {
@@ -20,5 +22,13 @@ public class CarRentConfig {
     @Bean
     public Page<Car> fiveCars() {
         return carService.findAll(PageRequest.of(0, 5));
+    }
+
+    @Bean
+    public MultipartResolver multipartResolver() {
+        int fileMaxSize = 2*1024*1024;
+        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
+        commonsMultipartResolver.setMaxUploadSize(fileMaxSize);
+        return commonsMultipartResolver;
     }
 }

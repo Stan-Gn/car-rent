@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CarRentRepositoryInterface extends JpaRepository<CarRent, Long> {
@@ -29,4 +30,8 @@ public interface CarRentRepositoryInterface extends JpaRepository<CarRent, Long>
             "or cr.pickUpDate >= (:start) and cr.pickUpDate<= (:end)) or cr.car is null ")
     Page<Car> findCarsNotReserved(@Param("start") LocalDateTime start,
                                   @Param("end") LocalDateTime end, Pageable pageRequest);
+
+
+    @Query(value = "Select cr from CarRent cr where cr.car = (:carToDelete) and (:now) between cr.pickUpDate and cr.dropOffDate")
+    Optional<CarRent> findCarRentItemByGivenCarWhereNowIsBetweenPickUpDateAndDropOffDate(@Param("now") LocalDateTime now, @Param("carToDelete")Car carToDelete);
 }

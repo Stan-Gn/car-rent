@@ -44,4 +44,8 @@ public class CarRentService {
     public void delete(CarRent carRent){
         carRentRepository.delete(carRent);
     }
+
+    public Optional<CarRent> findCarRentItemByGivenCarWhereNowIsBetweenPickUpDateAndDropOffDate(LocalDateTime now, Car car){
+        return carRentRepository.findCarRentItemByGivenCarWhereNowIsBetweenPickUpDateAndDropOffDate(now,car);
+    }
 }

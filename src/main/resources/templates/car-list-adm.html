@@ -178,7 +178,6 @@
                       <th class="cell100 column6CarList">Description</th>
                       <th class="cell100 column7CarList">Price/Day</th>
                       <th class="cell100 column8CarList">Price/KM</th>
-                      <th class="cell100 column9CarList">Remove</th>
                     </tr>
                     </thead>
                   </table>
@@ -196,9 +195,6 @@
                       <td class="cell100 column6CarList" th:text="${car.description}"></td>
                       <td class="cell100 column7CarList" th:text="${car.pricePerDay}"></td>
                       <td class="cell100 column8CarList" th:text="${car.pricePerKm}"></td>
-                      <td class="cell100 column9CarList">
-                        <a th:href="@{/admin/car-list-admin/remove(id=${car.id})}">Remove</a>
-                      </td>
                     </tr>
                     </tbody>
                   </table>

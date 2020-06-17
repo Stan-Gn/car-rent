@@ -194,13 +194,10 @@ th, td {
 }
 
 .column5UserList {
-  width: 9%;
+  width: 14%;
 }
 .column6UserList {
-  width: 9%;
-}
-.column7UserList {
-  width: 10%;
+  width: 14%;
 }
 /*----------------------------------*/
 .column1CarRentList {
@@ -240,7 +237,7 @@ th, td {
 }
 /*----------------------------------*/
 .column1CarList {
-  width: 5%;
+  width: 7%;
   padding-left: 40px;
 }
 
@@ -260,15 +257,12 @@ th, td {
   width: 10%;
 }
 .column6CarList {
-  width: 19%;
+  width: 27%;
 }
 .column7CarList {
   width: 10%;
 }
 .column8CarList {
-  width: 10%;
-}
-.column9CarList {
   width: 10%;
 }
 

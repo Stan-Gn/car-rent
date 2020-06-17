@@ -142,38 +142,6 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/admin/car-list-admin/{action}")
-    public ModelAndView carList(@PathVariable(value = "action") String action,
-                                @RequestParam(value = "id") long id) {
-        ModelAndView modelAndView = new ModelAndView("redirect:/admin/car-list-admin");
-
-        Optional<Car> carOptional = carService.findCarById(id);
-        if (carOptional.isPresent()) {
-            modelAndView = actionOnCarItem(action, modelAndView, carOptional);
-        } else {
-            modelAndView = new ModelAndView("forward:/admin/car-list-admin");
-            modelAndView.addObject("carListAdminError", "Car with given id does not exist");
-        }
-
-        return modelAndView;
-    }
-
-    private ModelAndView actionOnCarItem(@PathVariable("action") String action, ModelAndView modelAndView, Optional<Car> carOptional) {
-        switch (action) {
-            case "remove":
-                Car car = carOptional.get();
-                Optional<CarRent> cr = carRentService.findCarRentItemByGivenCarWhereNowIsBetweenPickUpDateAndDropOffDate(LocalDateTime.now(), car);
-                if (cr.isPresent()) {
-                    modelAndView = new ModelAndView("forward:/admin/car-list-admin");
-                    modelAndView.addObject("carListAdminError", "You cannot delete the car because it is now rented");
-                } else
-                    carService.delete(car);
-                break;
-        }
-        return modelAndView;
-    }
-
-
     @GetMapping("/admin/car-list-admin/addCar")
     public ModelAndView addCar() {
         ModelAndView modelAndView = new ModelAndView("addNewCar");

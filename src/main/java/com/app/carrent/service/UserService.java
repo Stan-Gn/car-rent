@@ -40,9 +40,6 @@ public class UserService  {
     }
     public void adminActionOnUser(String action, User userOptional) {
         switch (action) {
-            case "remove":
-                userRepository.delete(userOptional);
-                break;
             case "changeLockedStatus":
                 User u = userOptional;
                 u.setNonLocked(!u.isNonLocked());

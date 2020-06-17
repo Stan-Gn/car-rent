@@ -1,6 +1,7 @@
 package com.app.carrent.controller;
 
 import com.app.carrent.controller.modelSaver.PageAndPageNumbersModelSaver;
+import com.app.carrent.exception.CarRentNotFoundToActionInAdminPanelException;
 import com.app.carrent.exception.UserNotFoundToActionInAdminPanel;
 import com.app.carrent.model.Car;
 import com.app.carrent.model.CarRent;
@@ -19,9 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -84,7 +83,7 @@ public class AdminController {
 
 
     @GetMapping("/admin/car-rent-list-admin")
-    public ModelAndView carRentList(@RequestParam Optional<Integer> pageNumber) throws NotFoundException {
+    public ModelAndView carRentList(@RequestParam Optional<Integer> pageNumber) throws Exception {
         ModelAndView modelAndView = new ModelAndView("car-rent-list-adm");
 
         displayingListOfRentals(pageNumber, modelAndView);
@@ -92,7 +91,7 @@ public class AdminController {
         return modelAndView;
     }
 
-    private void displayingListOfRentals(@RequestParam Optional<Integer> pageNumber, ModelAndView modelAndView) throws NotFoundException {
+    private void displayingListOfRentals(@RequestParam Optional<Integer> pageNumber, ModelAndView modelAndView) throws Exception {
         pageNumber.orElse(1);
         int currentPage = pageNumber.orElse(1);
         Pageable pageRequest = PageRequest.of(currentPage - 1, 5);
@@ -107,63 +106,18 @@ public class AdminController {
     @GetMapping("/admin/car-rent-list-admin/{action}")
     public ModelAndView carRentListAction(@PathVariable(value = "action") String action,
                                           @RequestParam(value = "id") Long id,
-                                          @RequestParam(value = "distance", required = false) Optional<String> distanceOptional) {
+                                          @RequestParam(value = "distance", required = false) Optional<String> distanceOptional) throws Exception {
         ModelAndView modelAndView = new ModelAndView("forward:/admin/car-rent-list-admin");
 
         Optional<CarRent> carRentOptional = carRentService.findById(id);
+
         if (carRentOptional.isPresent()) {
-            ModelAndView model = actionOnRentItem(action, distanceOptional, modelAndView, carRentOptional);
-            if (model != null) return model;
+            carRentService.actionOnRentItemInAdminPanel(action,distanceOptional,carRentOptional.get());
         } else {
-            modelAndView.addObject("carRentListAdminError", "Failed to find user with given id");
+           throw new CarRentNotFoundToActionInAdminPanelException("Failed to find user with given id");
         }
 
         return modelAndView;
-    }
-
-    private ModelAndView actionOnRentItem(@PathVariable("action") String action, @RequestParam(value = "distance", required = false) Optional<String> distanceOptional, ModelAndView modelAndView, Optional<CarRent> carRentOptional) {
-        switch (action) {
-            case "delete":
-                carRentService.delete(carRentOptional.get());
-                break;
-            case "confirm":
-                CarRent carRent = carRentOptional.get();
-                if (carRent.isReturned()) {
-                    modelAndView.addObject("carRentListAdminError", "The car has been returned");
-                    return modelAndView;
-                } else if (distanceIsIncorrect(distanceOptional)) {
-                    modelAndView.addObject("carRentListAdminError", "Invalid distance value");
-                    return modelAndView;
-                } else {
-                    setReturnDateIfIsEarlierThanCurrentDate(carRent);
-                    calculationOfTotalAmountDue(distanceOptional, carRent);
-                    carRentService.save(carRent);
-                }
-                break;
-        }
-        return null;
-    }
-
-    private void calculationOfTotalAmountDue(@RequestParam(value = "distance", required = false) Optional<String> distanceOptional, CarRent carRent) {
-        double distance = getDoubleDistanceFromString(distanceOptional);
-        double days = ChronoUnit.HOURS.between(carRent.getPickUpDate(), carRent.getDropOffDate()) / 24.0;
-        double pricePerDay = carRent.getCar().getPricePerDay();
-        double pricePerKM = carRent.getCar().getPricePerKm();
-
-        BigDecimal totalPrice = BigDecimal.valueOf(days * pricePerDay + distance * pricePerKM).setScale(2, BigDecimal.ROUND_HALF_UP);
-        carRent.setDistance(distance);
-        carRent.setTotalPrice(totalPrice);
-        carRent.setReturned(true);
-    }
-
-    private void setReturnDateIfIsEarlierThanCurrentDate(CarRent carRent) {
-        if (LocalDateTime.now().isAfter(carRent.getDropOffDate())) {
-            carRent.setDropOffDate(LocalDateTime.now());
-        }
-    }
-
-    private boolean distanceIsIncorrect(@RequestParam(value = "distance", required = false) Optional<String> distanceOptional) {
-        return !distanceOptional.isPresent() || getDoubleDistanceFromString(distanceOptional) == null;
     }
 
     @GetMapping("/admin/car-list-admin")
@@ -192,7 +146,6 @@ public class AdminController {
     public ModelAndView carList(@PathVariable(value = "action") String action,
                                 @RequestParam(value = "id") long id) {
         ModelAndView modelAndView = new ModelAndView("redirect:/admin/car-list-admin");
-
 
         Optional<Car> carOptional = carService.findCarById(id);
         if (carOptional.isPresent()) {
@@ -254,13 +207,5 @@ public class AdminController {
     @ModelAttribute("carTypeList")
     public void carTypeLis(Model model) {
         model.addAttribute(Arrays.asList(Car.CarType.values()));
-    }
-
-    private Double getDoubleDistanceFromString(Optional<String> distance) {
-        try {
-            return Double.parseDouble(distance.get());
-        } catch (Exception e) {
-            return null;
-        }
     }
 }

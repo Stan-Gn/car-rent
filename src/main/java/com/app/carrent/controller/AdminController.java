@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -166,7 +165,6 @@ public class AdminController {
             modelAndView.addObject("addCarImageError", "Failed to save the image");
             return modelAndView;
         }
-
         modelAndView.addObject("success", "Correctly added car");
 
         return modelAndView;

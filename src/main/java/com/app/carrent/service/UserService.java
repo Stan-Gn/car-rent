@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Optional;
 
@@ -35,7 +36,18 @@ public class UserService  {
     public Optional<User>findById(Long id){
         return userRepository.findById(id);
     }
-    public void deleteUser(User user){
-        userRepository.delete(user);
+    public void deleteUser(User user){ userRepository.delete(user);
+    }
+    public void adminActionOnUser(String action, User userOptional) {
+        switch (action) {
+            case "remove":
+                userRepository.delete(userOptional);
+                break;
+            case "changeLockedStatus":
+                User u = userOptional;
+                u.setNonLocked(!u.isNonLocked());
+                userRepository.save(u);
+                break;
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.app.carrent.controller;
 
 import com.app.carrent.controller.modelSaver.PageAndPageNumbersModelSaver;
+import com.app.carrent.exception.UserNotFoundToActionInAdminPanel;
 import com.app.carrent.model.Car;
 import com.app.carrent.model.CarRent;
 import com.app.carrent.model.User;
@@ -72,31 +73,15 @@ public class AdminController {
 
     @GetMapping("/admin/user-list-admin/{action}")
     public ModelAndView userListAction(@PathVariable(value = "action") String action,
-                                       @RequestParam(value = "id") Long id) {
+                                       @RequestParam(value = "id") Long id) throws UserNotFoundToActionInAdminPanel {
         ModelAndView modelAndView = new ModelAndView("redirect:/admin/user-list-admin");
         Optional<User> userOptional = userService.findById(id);
-        if (userOptional.isPresent()) {
-            actionOnUserInAdminPanel(action, userOptional);
-        } else {
-            modelAndView = new ModelAndView("forward:/admin/user-list-admin");
-            modelAndView.addObject("userListAdminError", "Failed to find user with given id");
-        }
-
+        if (!userOptional.isPresent())
+            throw new UserNotFoundToActionInAdminPanel("Failed to find user with given id");
+        userService.adminActionOnUser(action, userOptional.get());
         return modelAndView;
     }
 
-    private void actionOnUserInAdminPanel(@PathVariable("action") String action, Optional<User> userOptional) {
-        switch (action) {
-            case "remove":
-                userService.deleteUser(userOptional.get());
-                break;
-            case "changeLockedStatus":
-                User u = userOptional.get();
-                u.setNonLocked(!u.isNonLocked());
-                userService.saveUser(u);
-                break;
-        }
-    }
 
     @GetMapping("/admin/car-rent-list-admin")
     public ModelAndView carRentList(@RequestParam Optional<Integer> pageNumber) throws NotFoundException {

@@ -158,13 +158,12 @@ public class AdminController {
             return modelAndView;
         }
 
-        carService.save(car);
         boolean savedCarImage = imageService.save(file, car);
-
         if (!savedCarImage) {
             modelAndView.addObject("addCarImageError", "Failed to save the image");
             return modelAndView;
         }
+        carService.save(car);
         modelAndView.addObject("success", "Correctly added car");
 
         return modelAndView;

@@ -5,29 +5,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Renten - Car Rental Service HTML Template</title>
+  <title>Access denied</title>
   <!-- site favicon -->
-  <link rel="shortcut icon" type="image/png" href="assets/images/favicon.jpg"/>
+  <link rel="shortcut icon" type="image/png" th:href="@{/assets/images/favicon.jpg}"/>
   <!-- fontawesome css link -->
-  <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+  <link rel="stylesheet" th:href="@{/assets/css/fontawesome.min.css}">
   <!-- bootstrap css link -->
-  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}">
   <!-- lightcase css link -->
-  <link rel="stylesheet" href="assets/css/lightcase.css">
+  <link rel="stylesheet" th:href="@{/assets/css/lightcase.css}">
   <!-- animate css link -->
-  <link rel="stylesheet" href="assets/css/animate.css">
+  <link rel="stylesheet" th:href="@{/assets/css/animate.css}">
   <!-- nice select css link -->
-  <link rel="stylesheet" href="assets/css/nice-select.css">
+  <link rel="stylesheet" th:href="@{/assets/css/nice-select.css}">
   <!-- datepicker css link -->
-  <link rel="stylesheet" href="assets/css/datepicker.min.css">
+  <link rel="stylesheet" th:href="@{/assets/css/datepicker.min.css}">
   <!-- wickedpicker css link -->
-  <link rel="stylesheet" href="assets/css/wickedpicker.min.css">
+  <link rel="stylesheet" th:href="@{/assets/css/wickedpicker.min.css}">
   <!-- jquery ui css link -->
-  <link rel="stylesheet" href="assets/css/jquery-ui.min.css">
+  <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.min.css}">
   <!-- owl carousel css link -->
-  <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
+  <link rel="stylesheet" th:href="@{/assets/css/owl.carousel.min.css}">
   <!-- main style css link -->
-  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}">
 </head>
 <body>
 
@@ -76,7 +76,7 @@
     <div class="header-bottom">
       <div class="container">
         <nav class="navbar navbar-expand-lg p-0">
-          <a class="site-logo site-title" href="/"><img src="assets/images/logo1.png" alt="site-logo"><span
+          <a class="site-logo site-title" href="/"><img th:src="@{/assets/images/logo1.png}" alt="site-logo"><span
                   class="logo-icon"><i class="flaticon-fire"></i></span></a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                   aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -96,14 +96,14 @@
   <!--  header-section end  -->
 
   <!-- inner-apge-banner start -->
-  <section class="inner-page-banner bg_img overlay-3" data-background="assets/images/inner-page-bg.jpg">
+  <section class="inner-page-banner bg_img overlay-3" th:data-background="@{/assets/images/inner-page-bg.jpg}">
     <div class="container">
       <div class="row">
         <div class="col-md-12">
-          <h2 class="page-title">page not found</h2>
+          <h2 class="page-title">Access denied</h2>
           <ol class="page-list">
-            <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
-            <li>404</li>
+            <li><a href="/"><i class="fa fa-home"></i> Home</a></li>
+            <li>Access denied</li>
           </ol>
         </div>
       </div>
@@ -117,10 +117,9 @@
       <div class="row justify-content-center">
         <div class="col-lg-8">
           <div class="error-content text-center">
-            <img src="assets/images/elements/404.png" alt="image">
-            <h2 class="title">Oops! sorry page not found </h2>
+            <h2 class="title">Access denied</h2>
             <p>Quisque cras molestie dictum, aliquam litora. Tempus amet pellentesque vitae ante, consectequat sed vestibulum fringilla dictum, enim a taciti et orci fusce, non suspendisse, nunc at rutrumPellentesque turpis et nonummy eu nulla. Quis gravida ultrices nam vehicula adipiscing quam.</p>
-            <a href="index.html" class="cmn-btn">got to home</a>
+            <a href="/" class="cmn-btn">got to home</a>
           </div>
         </div>
       </div>
@@ -136,7 +135,7 @@
           <div class="col-lg-4 col-sm-8">
             <div class="footer-widget widget-about">
               <div class="widget-about-content">
-                <a href="/" class="footer-logo"><img src="assets/images/logo-footer.png" alt="logo"></a>
+                <a href="/" class="footer-logo"><img th:src="@{/assets/images/logo-footer.png}" alt="logo"></a>
                 <p>Lorem ipsum dolor sit amet, congue placeranec. Leo faucibus sed eleifend bibendum n vehicula nulla
                   mauris nulla ipsum neque sed. Gravida egestas fermentum urna, velit sed. </p>
                 <ul class="social-links">
@@ -195,28 +194,28 @@
   <!-- scroll-to-top end -->
 
   <!-- jquery js link -->
-  <script src="assets/js/jquery-3.3.1.min.js"></script>
+  <script th:src="@{/assets/js/jquery-3.3.1.min.js}"></script>
   <!-- jquery migrate js link -->
-  <script src="assets/js/jquery-migrate-3.0.0.js"></script>
+  <script th:src="@{/assets/js/jquery-migrate-3.0.0.js}"></script>
   <!-- bootstrap js link -->
-  <script src="assets/js/bootstrap.min.js"></script>
+  <script th:src="@{/assets/js/bootstrap.min.js}"></script>
   <!-- lightcase js link -->
-  <script src="assets/js/lightcase.js"></script>
+  <script th:src="@{/assets/js/lightcase.js}"></script>
   <!-- wow js link -->
-  <script src="assets/js/wow.min.js"></script>
+  <script th:src="@{/assets/js/wow.min.js}"></script>
   <!-- nice select js link -->
-  <script src="assets/js/jquery.nice-select.min.js"></script>
+  <script th:src="@{/assets/js/jquery.nice-select.min.js}"></script>
   <!-- datepicker js link -->
-  <script src="assets/js/datepicker.min.js"></script>
-  <script src="assets/js/datepicker.en.js"></script>
+  <script th:src="@{/assets/js/datepicker.min.js}"></script>
+  <script th:src="@{/assets/js/datepicker.en.js}"></script>
   <!-- wickedpicker js link -->
-  <script src="assets/js/wickedpicker.min.js"></script>
+  <script th:src="@{/assets/js/wickedpicker.min.js}"></script>
   <!-- owl carousel js link -->
-  <script src="assets/js/owl.carousel.min.js"></script>
+  <script th:src="@{/assets/js/owl.carousel.min.js}"></script>
   <!-- jquery ui js link -->
-  <script src="assets/js/jquery-ui.min.js"></script>
+  <script th:src="@{/assets/js/jquery-ui.min.js}"></script>
   <!-- main js link -->
-  <script src="assets/js/main.js"></script>
+  <script th:src="@{/assets/js/main.js}"></script>
 </body>
 
 </html>

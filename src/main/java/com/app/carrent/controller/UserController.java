@@ -64,6 +64,12 @@ public class UserController {
         return modelAndView;
     }
 
+    @GetMapping ("accessDenied")
+    public ModelAndView accessDenied(){
+        ModelAndView modelAndView = new ModelAndView("accessDenied");
+        return modelAndView;
+    }
+
 
 
 }

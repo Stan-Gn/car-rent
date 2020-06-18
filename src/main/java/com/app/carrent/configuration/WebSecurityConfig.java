@@ -35,11 +35,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().disable();
         http.authorizeRequests()
                 .antMatchers("/reservation/**").authenticated()
-                .antMatchers("/admin/**").hasRole(User.Role.ADMIN.toString())
+                .antMatchers("/admin/**").hasAnyRole(User.Role.ADMIN.toString())
                 .and()
                 .formLogin().loginPage("/login")
                 .failureUrl("/login?error")
                 .successHandler(mySuccessHandler())
+                .and()
+                .exceptionHandling().accessDeniedPage("/accessDenied")
                 .and()
                 .logout().logoutSuccessUrl("/login?logout");
 

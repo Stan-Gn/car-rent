@@ -79,4 +79,11 @@ public class CarRentAppControllerAdvice {
         modelAndView.addObject("addCarImageError", "File size too large");
         return modelAndView;
     }
+
+    @ExceptionHandler(CarToRentNotFoundException.class)
+    public ModelAndView handleException(CarToRentNotFoundException exception){
+        ModelAndView modelAndView = new ModelAndView("exceptions");
+        modelAndView.addObject("mess", exception.getMessage());
+        return modelAndView;
+    }
 }

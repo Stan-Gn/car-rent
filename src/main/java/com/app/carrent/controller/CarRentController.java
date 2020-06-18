@@ -2,6 +2,7 @@ package com.app.carrent.controller;
 
 import com.app.carrent.controller.modelSaver.PageAndPageNumbersModelSaver;
 import com.app.carrent.controller.parser.CarRentDateTimeParser;
+import com.app.carrent.exception.CarToRentNotFoundException;
 import com.app.carrent.model.Car;
 import com.app.carrent.model.CarRent;
 import com.app.carrent.model.User;
@@ -74,14 +75,12 @@ public class CarRentController {
     }
 
     @GetMapping("/reservation")
-    public ModelAndView reservation(@RequestParam long id) {
+    public ModelAndView reservation(@RequestParam long id) throws CarToRentNotFoundException {
         ModelAndView modelAndView = new ModelAndView("reservation");
         Optional<Car> carOptional = carService.findCarById(id);
-        if (carOptional.isPresent())
-            modelAndView.addObject("carToRent", carOptional.get()); //todo obsługa błedu
-        else {
-            modelAndView.addObject("reservationError", "Car with given id does not exist");
-        }
+        if (!carOptional.isPresent())
+            throw new CarToRentNotFoundException("Car with given id does not exist");
+        modelAndView.addObject("carToRent", carOptional.get());
         return modelAndView;
     }
 

@@ -4344,6 +4344,9 @@ input[type=checkbox]:checked+label:before {
 .error-content .cmn-btn {
     margin-top: 30px;
 }
+.errorMess{
+    color: red;
+}
 
 #preloader {
     position: fixed;

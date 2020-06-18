@@ -50,10 +50,6 @@ public class CarRentService {
         carRentRepository.delete(carRent);
     }
 
-    public Optional<CarRent> findCarRentItemByGivenCarWhereNowIsBetweenPickUpDateAndDropOffDate(LocalDateTime now, Car car){
-        return carRentRepository.findCarRentItemByGivenCarWhereNowIsBetweenPickUpDateAndDropOffDate(now,car);
-    }
-
     public void actionOnRentItemInAdminPanel(String action, Optional<String> distanceOptional, CarRent carRent) throws CarIsReturnedInAdminPanelActionException, InvalidDistanceValueInPanelAdminException {
         switch (action) {
             case "delete":

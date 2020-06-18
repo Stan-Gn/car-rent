@@ -65,7 +65,7 @@ public class CarRentController {
                 carsPage = carRentService.findCarsNotReserved(pickUp, dropOff, pageRequest);
             }
         }
-        if(carsPage.getTotalPages()>0) {
+        if (carsPage.getTotalPages() > 0) {
             PageAndPageNumbersModelSaver pageAndPageNumbersModelSaver = new PageAndPageNumbersModelSaver();
             pageAndPageNumbersModelSaver.saveToModel(modelAndView, "carsPage", carsPage, currentPage);
         }
@@ -77,9 +77,8 @@ public class CarRentController {
     public ModelAndView reservation(@RequestParam long id) {
         ModelAndView modelAndView = new ModelAndView("reservation");
         Optional<Car> carOptional = carService.findCarById(id);
-
-        if(carOptional.isPresent())
-        modelAndView.addObject("carToRent", carOptional.get());
+        if (carOptional.isPresent())
+            modelAndView.addObject("carToRent", carOptional.get()); //todo obsługa błedu
         else {
             modelAndView.addObject("reservationError", "Car with given id does not exist");
         }
@@ -96,7 +95,7 @@ public class CarRentController {
         ModelAndView modelAndView = new ModelAndView("reservation");
         Optional<Car> carOptional = carService.findCarById(id);
 
-        if(!carOptional.isPresent()){
+        if (!carOptional.isPresent()) {
             return modelAndView.addObject("reservationError", "Car with given id does not exist");
         }
 

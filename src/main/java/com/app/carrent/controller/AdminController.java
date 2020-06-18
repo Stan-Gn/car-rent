@@ -1,8 +1,7 @@
 package com.app.carrent.controller;
 
 import com.app.carrent.controller.modelSaver.PageAndPageNumbersModelSaver;
-import com.app.carrent.exception.CarRentNotFoundToActionInAdminPanelException;
-import com.app.carrent.exception.UserNotFoundToActionInAdminPanel;
+import com.app.carrent.exception.*;
 import com.app.carrent.model.Car;
 import com.app.carrent.model.CarRent;
 import com.app.carrent.model.User;
@@ -111,9 +110,9 @@ public class AdminController {
         Optional<CarRent> carRentOptional = carRentService.findById(id);
 
         if (carRentOptional.isPresent()) {
-            carRentService.actionOnRentItemInAdminPanel(action,distanceOptional,carRentOptional.get());
+            carRentService.actionOnRentItemInAdminPanel(action, distanceOptional, carRentOptional.get());
         } else {
-           throw new CarRentNotFoundToActionInAdminPanelException("Failed to find user with given id");
+            throw new CarRentNotFoundToActionInAdminPanelException("Failed to find user with given id");
         }
 
         return modelAndView;
@@ -150,7 +149,7 @@ public class AdminController {
 
     @PostMapping("/admin/car-list-admin/addCar")
     public ModelAndView addCar(@ModelAttribute(value = "car") @Valid Car car, Errors errors,
-                               @RequestParam(value = "file") MultipartFile file) {
+                               @RequestParam(value = "file") MultipartFile file) throws ImageFileNotFoundException, InvalidImageFileExtensionException, IOImageFileTransferException {
         ModelAndView modelAndView = new ModelAndView("addNewCar");
 
         if (errors.hasErrors()) {
@@ -158,12 +157,8 @@ public class AdminController {
             return modelAndView;
         }
 
-        boolean savedCarImage = imageService.save(file, car);
-        if (!savedCarImage) {
-            modelAndView.addObject("addCarImageError", "Failed to save the image");
-            return modelAndView;
-        }
         carService.save(car);
+        imageService.save(file, car);
         modelAndView.addObject("success", "Correctly added car");
 
         return modelAndView;

@@ -2,11 +2,12 @@ package com.app.carrent.controller;
 
 import com.app.carrent.exception.*;
 import com.app.carrent.model.Car;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.ModelAndView;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @ControllerAdvice
@@ -84,6 +85,13 @@ public class CarRentAppControllerAdvice {
     public ModelAndView handleException(CarToRentNotFoundException exception){
         ModelAndView modelAndView = new ModelAndView("exceptions");
         modelAndView.addObject("mess", exception.getMessage());
+        return modelAndView;
+    }
+
+    @ExceptionHandler(DatesToFilterAreNotValidException.class)
+    public ModelAndView handleException(DatesToFilterAreNotValidException exc, RedirectAttributes redirectAttributes){
+        ModelAndView modelAndView = new ModelAndView("redirect:/cars");
+        redirectAttributes.addFlashAttribute("dateError",exc.getMessage());
         return modelAndView;
     }
 }

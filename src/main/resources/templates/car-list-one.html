@@ -175,6 +175,7 @@
                       pickUpTime=${#request.getParameter('pickUpTime')},
                       dropOffDate=${#request.getParameter('dropOffDate')},
                       dropOffTime=${#request.getParameter('dropOffTime')})}" th:text=${pageNumber}></a>
+
               </li>
             </ul>
           </nav>
@@ -210,6 +211,7 @@
                   <button type="submit" class="cmn-btn">Filter</button>
                   <input type="button" class="cmn-btn"value="remove filter" onclick="location.href='/cars';"/>
                 </form>
+                <p class="errorMess" th:text="${dateError}"></p>
               </div>
             </div><!-- widget end -->
           </aside>

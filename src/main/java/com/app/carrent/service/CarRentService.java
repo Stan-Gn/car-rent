@@ -1,13 +1,17 @@
 package com.app.carrent.service;
 
+import com.app.carrent.controller.parser.CarRentDateTimeParser;
 import com.app.carrent.exception.CarIsReturnedInAdminPanelActionException;
+import com.app.carrent.exception.DatesToFilterAreNotValidException;
 import com.app.carrent.exception.InvalidDistanceValueInPanelAdminException;
 import com.app.carrent.model.Car;
 import com.app.carrent.model.CarRent;
 import com.app.carrent.repository.CarRentRepositoryInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -21,10 +25,12 @@ import java.util.Optional;
 public class CarRentService {
 
     private CarRentRepositoryInterface carRentRepository;
+    private CarService carService;
 
     @Autowired
-    public CarRentService(CarRentRepositoryInterface carRentRepository) {
+    public CarRentService(CarRentRepositoryInterface carRentRepository,CarService carService) {
         this.carRentRepository = carRentRepository;
+        this.carService = carService;
     }
 
     public CarRent save(CarRent carRent){
@@ -97,4 +103,5 @@ public class CarRentService {
         carRent.setTotalPrice(totalPrice);
         carRent.setReturned(true);
     }
+
 }

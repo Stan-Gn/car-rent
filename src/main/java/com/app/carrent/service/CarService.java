@@ -28,7 +28,7 @@ public class CarService {
     @Autowired
     public CarService(CarRepositoryInterface carRepository,CarRentRepositoryInterface carRentRepository) {
         this.carRepository = carRepository;
-        this.carRepository = carRepository;
+        this.carRentRepository = carRentRepository;
     }
 
     public List<Car> findAll() {
@@ -70,8 +70,6 @@ public class CarService {
             return findAll(pageRequest);
     }
     private boolean isAllDatesArePresentAndNotEmptyToFilterUnreservedCars(Optional<String> pickUpDate, Optional<String> pickUpTime, Optional<String> dropOffDate, Optional<String> dropOffTime) {
-        if(pickUpDate.isPresent())
-            System.out.println(pickUpDate.get().isEmpty());
         return pickUpDate.isPresent() && !pickUpDate.get().isEmpty()
                 && pickUpTime.isPresent() && !pickUpTime.get().isEmpty()
                 && dropOffDate.isPresent() && !dropOffDate.get().isEmpty()

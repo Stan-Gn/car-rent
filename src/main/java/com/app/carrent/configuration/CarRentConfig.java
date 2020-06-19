@@ -12,7 +12,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 @Configuration
 public class CarRentConfig {
-    private CarService carService;
+    private final CarService carService;
 
     @Autowired
     public CarRentConfig(CarService carService) {

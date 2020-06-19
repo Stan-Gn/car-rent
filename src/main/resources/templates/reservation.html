@@ -156,7 +156,7 @@
                 <div class="content-block">
                   <h3 class="title" th:if="${reservationError}">Reservation failed</h3>
                   <p class="errorMess" th:text="${reservationError}"></p>
-                  <p class="successReservation" th:text="${successReservation}"></p>
+                  <p class="successMess" th:text="${successReservation}"></p>
                   <ul th:each="conflict :  ${dateConflictList}">
                     <li th:text="${conflict.pickUpDate} +' - '+ ${conflict.dropOffDate}"></li>
                   </ul>

@@ -23,13 +23,11 @@ import java.util.Optional;
 public class CarRentService {
 
     private CarRentRepositoryInterface carRentRepository;
-    private CarService carService;
     private UserService userService;
 
     @Autowired
-    public CarRentService(CarRentRepositoryInterface carRentRepository, CarService carService,UserService userService) {
+    public CarRentService(CarRentRepositoryInterface carRentRepository, UserService userService) {
         this.carRentRepository = carRentRepository;
-        this.carService = carService;
         this.userService = userService;
     }
 

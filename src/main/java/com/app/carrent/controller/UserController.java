@@ -18,12 +18,10 @@ import javax.validation.Valid;
 public class UserController {
 
     private UserService userService;
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserService userService,PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/login")

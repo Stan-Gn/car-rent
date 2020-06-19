@@ -23,13 +23,11 @@ public class CarRentController {
 
     private CarService carService;
     private CarRentService carRentService;
-    private UserService userService;
 
     @Autowired
-    public CarRentController(CarService carService, CarRentService carRentService, UserService userService) {
+    public CarRentController(CarService carService, CarRentService carRentService) {
         this.carService = carService;
         this.carRentService = carRentService;
-        this.userService = userService;
     }
 
     @GetMapping("/")

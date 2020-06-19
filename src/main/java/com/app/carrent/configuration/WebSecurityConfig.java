@@ -1,6 +1,6 @@
 package com.app.carrent.configuration;
 
-import com.app.carrent.AuthenticationComponent.SimpleAuthenticationSuccessHandler;
+import com.app.carrent.authenticationComponent.SimpleAuthenticationSuccessHandler;
 import com.app.carrent.model.User;
 import com.app.carrent.service.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private UserDetailServiceImpl userDetailService;
+    private final UserDetailServiceImpl userDetailService;
 
     @Autowired
     public WebSecurityConfig(UserDetailServiceImpl userDetailService) {

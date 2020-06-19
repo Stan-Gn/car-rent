@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Optional;
 
@@ -28,6 +27,9 @@ public class UserService  {
     }
 
     public User saveUser(User user){
+        user.setEnabled(true); //todo false -> when activation by e-mail
+        user.setRole(User.Role.USER);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
     public Page<User> findAll(Pageable pageRequest) {
@@ -35,8 +37,6 @@ public class UserService  {
     }
     public Optional<User>findById(Long id){
         return userRepository.findById(id);
-    }
-    public void deleteUser(User user){ userRepository.delete(user);
     }
     public void adminActionOnUser(String action, User userOptional) {
         switch (action) {

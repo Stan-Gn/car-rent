@@ -49,10 +49,6 @@ public class UserController {
             return "registration";
         }
 
-        user.setEnabled(true); //todo false -> when activation by e-mail
-        user.setRole(User.Role.USER);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
         userService.saveUser(user);
         model.addAttribute("regSuccess", "registration completed successfully");
         return "registration";

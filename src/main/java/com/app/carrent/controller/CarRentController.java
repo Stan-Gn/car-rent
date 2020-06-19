@@ -1,11 +1,8 @@
 package com.app.carrent.controller;
 
 import com.app.carrent.controller.modelSaver.PageAndPageNumbersModelSaver;
-import com.app.carrent.controller.parser.CarRentDateTimeParser;
 import com.app.carrent.exception.CarToRentNotFoundException;
 import com.app.carrent.model.Car;
-import com.app.carrent.model.CarRent;
-import com.app.carrent.model.User;
 import com.app.carrent.service.CarRentService;
 import com.app.carrent.service.CarService;
 import com.app.carrent.service.UserService;
@@ -19,8 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -55,7 +50,7 @@ public class CarRentController {
         ModelAndView modelAndView = new ModelAndView("car-list-one");
         int currentPageNumber = pageNumber.orElse(1);
 
-        Page<Car> carsPage = carService.getCarsPage(currentPageNumber,sort,pickUpDate,pickUpTime,dropOffDate,dropOffTime);
+        Page<Car> carsPage = carService.getCarsPage(currentPageNumber, sort, pickUpDate, pickUpTime, dropOffDate, dropOffTime);
 
         if (carsPage.getTotalPages() > 0) {
             PageAndPageNumbersModelSaver pageAndPageNumbersModelSaver = new PageAndPageNumbersModelSaver();
@@ -81,99 +76,21 @@ public class CarRentController {
                                     @RequestParam String pickUpTime,
                                     @RequestParam String dropOffDate,
                                     @RequestParam String dropOffTime,
-                                    Authentication auth) {
+                                    Authentication auth) throws Exception {
         ModelAndView modelAndView = new ModelAndView("reservation");
         Optional<Car> carOptional = carService.findCarById(id);
 
         if (!carOptional.isPresent()) {
-            return modelAndView.addObject("reservationError", "Car with given id does not exist");
+            throw new CarToRentNotFoundException("Car with given id does not exist");
         }
+        Car carToRent = carOptional.get();
+        modelAndView.addObject("carToRent", carToRent);
 
-        modelAndView.addObject("carToRent", carService.findCarById(id).get());
+        carRentService.saveReservation(pickUpDate, pickUpTime, dropOffDate, dropOffTime,carToRent,auth,id);
 
-        if (checkingIfDateTimeFieldsAreEmpty(pickUpDate, pickUpTime, dropOffDate, dropOffTime, modelAndView))
-            return modelAndView;
-
-        LocalDateTime pickUp = CarRentDateTimeParser.parseLocalDateTime(pickUpDate, pickUpTime);
-        LocalDateTime dropOff = CarRentDateTimeParser.parseLocalDateTime(dropOffDate, dropOffTime);
-
-        if (pickUp == null || dropOff == null) {
-            return modelAndView.addObject("reservationError", "Invalid date format");
-        }
-
-        if (checkingIfPickUpDateIsAfterDropOffDate(pickUp, dropOff, modelAndView))
-            return modelAndView;
-
-        if (checkingIfPickUpDateIsBeforeNow(pickUp, modelAndView))
-            return modelAndView;
-
-        Car car = carOptional.get();
-        List<CarRent> dateConflictCarRentList = carRentService.findDateConflict(pickUp, dropOff, car);
-
-        if (checkingDateConflicts(dateConflictCarRentList, modelAndView))
-            return modelAndView;
-
-        if (auth == null) {
-            modelAndView.addObject("reservationError", "Reservation portal error");
-            return modelAndView;
-        }
-
-        Optional<User> user = userService.findUserByEmail(auth.getName());
-        if (user.isPresent()) {
-            saveCarRent(pickUp, dropOff, car, user);
-        } else {
-            modelAndView.addObject("reservationError", "Reservation portal error");
-        }
+        modelAndView.addObject("successReservation", "The car was successfully booked");
 
         return modelAndView;
     }
-
-    private void saveCarRent(LocalDateTime pickUp, LocalDateTime dropOff, Car car, Optional<User> user) {
-        CarRent carRent = new CarRent();
-        carRent.setCar(car);
-        carRent.setReturned(false);
-        carRent.setPickUpDate(pickUp);
-        carRent.setDropOffDate(dropOff);
-        carRent.setUser(user.get());
-        carRentService.save(carRent);
-    }
-
-    private boolean checkingDateConflicts(List<CarRent> dateConflictCarRentList, ModelAndView modelAndView) {
-        if (!dateConflictCarRentList.isEmpty()) {
-            modelAndView.addObject("reservationError", "There is a conflict between booking dates");
-            modelAndView.addObject("dateConflictList", dateConflictCarRentList);
-            return true;
-        }
-        return false;
-    }
-
-    private boolean checkingIfPickUpDateIsBeforeNow(LocalDateTime pickUp, ModelAndView modelAndView) {
-        if (pickUp.isBefore(LocalDateTime.now())) {
-            modelAndView.addObject("reservationError", "Pickup date is before current date.");
-            return true;
-        }
-        return false;
-    }
-
-    private boolean checkingIfPickUpDateIsAfterDropOffDate(LocalDateTime pickUp, LocalDateTime dropOff, ModelAndView modelAndView) {
-        if (pickUp.isAfter(dropOff)) {
-            modelAndView.addObject("reservationError", "Pickup date is after drop off date");
-            return true;
-        }
-        return false;
-    }
-
-    private boolean checkingIfDateTimeFieldsAreEmpty(String pickUpDate,
-                                                     String pickUpTime,
-                                                     String dropOffDate,
-                                                     String dropOffTime,
-                                                     ModelAndView modelAndView) {
-        if (pickUpDate.isEmpty() || pickUpTime.isEmpty() || dropOffDate.isEmpty() || dropOffTime.isEmpty()) {
-            modelAndView.addObject("reservationError", "Please enter a date");
-            return true;
-        }
-        return false;
-    }
-
 
 }

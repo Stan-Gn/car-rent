@@ -4,7 +4,6 @@ package com.app.carrent.service;
 import com.app.carrent.controller.parser.CarRentDateTimeParser;
 import com.app.carrent.exception.DatesToFilterAreNotValidException;
 import com.app.carrent.model.Car;
-import com.app.carrent.model.CarRent;
 import com.app.carrent.repository.CarRentRepositoryInterface;
 import com.app.carrent.repository.CarRepositoryInterface;
 import org.springframework.beans.factory.annotation.Autowired;

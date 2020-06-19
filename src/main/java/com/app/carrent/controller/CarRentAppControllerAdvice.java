@@ -2,7 +2,6 @@ package com.app.carrent.controller;
 
 import com.app.carrent.exception.*;
 import com.app.carrent.model.Car;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -94,4 +93,17 @@ public class CarRentAppControllerAdvice {
         redirectAttributes.addFlashAttribute("dateError",exc.getMessage());
         return modelAndView;
     }
+
+    @ExceptionHandler(DatesToCarReservationAreNotValidException.class)
+    public String handleException(DatesToCarReservationAreNotValidException exception,RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute("reservationError", exception.getMessage());
+        return "redirect:/reservation?id="+exception.getId();
+    }
+    @ExceptionHandler(DatesToCarReservationConflictValidException.class)
+    public String handleException(DatesToCarReservationConflictValidException exception,RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute("reservationError", exception.getMessage());
+        redirectAttributes.addFlashAttribute("dateConflictList", exception.getDateConflictCarRentList());
+        return "redirect:/reservation?id="+exception.getId();
+    }
+
 }

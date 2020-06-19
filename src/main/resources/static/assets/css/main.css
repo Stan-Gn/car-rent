@@ -4215,11 +4215,17 @@ input[type=checkbox]:checked+label:before {
     text-align: left;
     position: absolute;
 }
-.success{
+.successAddedNewCar{
     color: green;
     text-align: left;
     position: absolute;
 }
+
+.successMess{
+    color: green;
+}
+
+
 .reg-error-email{
     color: red;
 }

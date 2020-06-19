@@ -1,17 +1,15 @@
 package com.app.carrent.service;
 
 import com.app.carrent.controller.parser.CarRentDateTimeParser;
-import com.app.carrent.exception.CarIsReturnedInAdminPanelActionException;
-import com.app.carrent.exception.DatesToFilterAreNotValidException;
-import com.app.carrent.exception.InvalidDistanceValueInPanelAdminException;
+import com.app.carrent.exception.*;
 import com.app.carrent.model.Car;
 import com.app.carrent.model.CarRent;
+import com.app.carrent.model.User;
 import com.app.carrent.repository.CarRentRepositoryInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -26,22 +24,21 @@ public class CarRentService {
 
     private CarRentRepositoryInterface carRentRepository;
     private CarService carService;
+    private UserService userService;
 
     @Autowired
-    public CarRentService(CarRentRepositoryInterface carRentRepository,CarService carService) {
+    public CarRentService(CarRentRepositoryInterface carRentRepository, CarService carService,UserService userService) {
         this.carRentRepository = carRentRepository;
         this.carService = carService;
+        this.userService = userService;
     }
 
-    public CarRent save(CarRent carRent){
+    public CarRent save(CarRent carRent) {
         return carRentRepository.save(carRent);
     }
 
-    public List<CarRent> findDateConflict(LocalDateTime pickUpDate, LocalDateTime dropOffDate, Car car){
-        return carRentRepository.findDateConflict(pickUpDate,dropOffDate,car);
-    }
-    public Page<Car> findCarsNotReserved(LocalDateTime pickUp, LocalDateTime dropOff, Pageable pageRequest){
-        return carRentRepository.findCarsNotReserved(pickUp,dropOff,pageRequest);
+    public List<CarRent> findDateConflict(LocalDateTime pickUpDate, LocalDateTime dropOffDate, Car car) {
+        return carRentRepository.findDateConflict(pickUpDate, dropOffDate, car);
     }
 
     public Page<CarRent> findAll(Pageable pageRequest) {
@@ -52,7 +49,7 @@ public class CarRentService {
         return carRentRepository.findById(id);
     }
 
-    public void delete(CarRent carRent){
+    public void delete(CarRent carRent) {
         carRentRepository.delete(carRent);
     }
 
@@ -86,6 +83,7 @@ public class CarRentService {
             return null;
         }
     }
+
     private void setReturnDateIfIsEarlierThanCurrentDate(CarRent carRent) {
         if (LocalDateTime.now().isAfter(carRent.getDropOffDate())) {
             carRent.setDropOffDate(LocalDateTime.now());
@@ -103,5 +101,67 @@ public class CarRentService {
         carRent.setTotalPrice(totalPrice);
         carRent.setReturned(true);
     }
+
+
+    public void saveReservation(String pickUpDate, String pickUpTime, String dropOffDate, String dropOffTime, Car carToRent, Authentication auth,long id) throws Exception {
+        if (checkingIfDateTimeFieldsAreEmpty(pickUpDate, pickUpTime, dropOffDate, dropOffTime))
+            throw new DatesToCarReservationAreNotValidException("Please enter a date",id);
+
+        LocalDateTime pickUp = CarRentDateTimeParser.parseLocalDateTime(pickUpDate, pickUpTime);
+        LocalDateTime dropOff = CarRentDateTimeParser.parseLocalDateTime(dropOffDate, dropOffTime);
+
+        if (pickUp == null || dropOff == null) {
+            throw new DatesToCarReservationAreNotValidException("Invalid date format", id);
+        }
+
+        if (checkingIfPickUpDateIsAfterDropOffDate(pickUp, dropOff))
+            throw new DatesToCarReservationAreNotValidException("Pickup date is after drop off date",id);
+
+        if (checkingIfPickUpDateIsBeforeNow(pickUp))
+            throw new DatesToCarReservationAreNotValidException("Pickup date is before current date.",id);
+
+        List<CarRent> dateConflictCarRentList = findDateConflict(pickUp, dropOff, carToRent);
+        checkingDateConflicts(dateConflictCarRentList,id);
+
+
+
+        if (auth == null)
+            throw new Exception("Reservation portal error");
+
+        Optional<User> user = userService.findUserByEmail(auth.getName());
+        if (user.isPresent()) {
+            saveCarRent(pickUp, dropOff, carToRent, user);
+        } else {
+            throw new Exception("Reservation portal error - user not found");
+        }
+    }
+
+    private void saveCarRent(LocalDateTime pickUp, LocalDateTime dropOff, Car car, Optional<User> user) {
+        CarRent carRent = new CarRent();
+        carRent.setCar(car);
+        carRent.setReturned(false);
+        carRent.setPickUpDate(pickUp);
+        carRent.setDropOffDate(dropOff);
+        carRent.setUser(user.get());
+        save(carRent);
+    }
+
+    private void checkingDateConflicts(List<CarRent> dateConflictCarRentList,long id) {
+        if (!dateConflictCarRentList.isEmpty())
+            throw new DatesToCarReservationConflictValidException("There is a conflict between booking dates", dateConflictCarRentList,id);
+    }
+
+    private boolean checkingIfPickUpDateIsBeforeNow(LocalDateTime pickUp) {
+        return pickUp.isBefore(LocalDateTime.now());
+    }
+
+    private boolean checkingIfPickUpDateIsAfterDropOffDate(LocalDateTime pickUp, LocalDateTime dropOff) {
+        return (pickUp.isAfter(dropOff));
+    }
+
+    private boolean checkingIfDateTimeFieldsAreEmpty(String pickUpDate, String pickUpTime, String dropOffDate, String dropOffTime) {
+        return (pickUpDate.isEmpty() || pickUpTime.isEmpty() || dropOffDate.isEmpty() || dropOffTime.isEmpty());
+    }
+
 
 }

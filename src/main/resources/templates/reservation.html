@@ -155,7 +155,8 @@
                 </div>
                 <div class="content-block">
                   <h3 class="title" th:if="${reservationError}">Reservation failed</h3>
-                  <p th:text="${reservationError}"></p>
+                  <p class="errorMess" th:text="${reservationError}"></p>
+                  <p class="successReservation" th:text="${successReservation}"></p>
                   <ul th:each="conflict :  ${dateConflictList}">
                     <li th:text="${conflict.pickUpDate} +' - '+ ${conflict.dropOffDate}"></li>
                   </ul>
@@ -175,7 +176,7 @@
         <div class="col-lg-4">
           <aside class="sidebar">
             <div class="widget widget-all-cars">
-              <h4 class="widget-title">our all cars</h4>
+              <h4 class="widget-title">our cars</h4>
               <ul class="cars-list" th:each="car :  ${@fiveCars}">
                 <li><a th:href="@{/reservation(id=${car.id})}" th:text="${car.mark} + ' ' + ${car.model}" ></a></li>
               </ul>

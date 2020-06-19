@@ -13,8 +13,8 @@ import java.util.Optional;
 @Service
 public class UserService  {
 
-    private UserRepositoryInterface userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepositoryInterface userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserService(UserRepositoryInterface userRepository,PasswordEncoder passwordEncoder) {

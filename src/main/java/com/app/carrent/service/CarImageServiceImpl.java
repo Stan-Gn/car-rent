@@ -15,7 +15,7 @@ import java.io.IOException;
 @Service
 public class CarImageServiceImpl implements CarImageServiceInterface {
 
-    private ServletContext context;
+    private final ServletContext context;
 
     @Autowired
     public CarImageServiceImpl(ServletContext context) {

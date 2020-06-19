@@ -26,10 +26,10 @@ import java.util.Optional;
 @Controller
 public class AdminController {
 
-    private UserService userService;
-    private CarRentService carRentService;
-    private CarService carService;
-    private CarImageServiceInterface imageService;
+    private final UserService userService;
+    private final CarRentService carRentService;
+    private final CarService carService;
+    private final CarImageServiceInterface imageService;
 
 
     @Autowired

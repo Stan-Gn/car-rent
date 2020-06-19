@@ -67,7 +67,7 @@ public class User implements UserDetails {
         Role(String role) {
             this.role = role;
         }
-        String role;
+        final String role;
 
         public String getRole() {
             return role;

@@ -21,8 +21,8 @@ import java.util.Optional;
 @Controller
 public class CarRentController {
 
-    private CarService carService;
-    private CarRentService carRentService;
+    private final CarService carService;
+    private final CarRentService carRentService;
 
     @Autowired
     public CarRentController(CarService carService, CarRentService carRentService) {

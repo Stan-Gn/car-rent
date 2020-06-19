@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
 
-    private UserRepositoryInterface userRepository;
+    private final UserRepositoryInterface userRepository;
 
     public UserDetailServiceImpl(UserRepositoryInterface userRepository) {
         this.userRepository = userRepository;

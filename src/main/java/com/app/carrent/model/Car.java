@@ -49,7 +49,7 @@ public class Car {
 
     public enum CarType {
         KOMBI(1), COUPE(2), SEDAN(3), SUV(4), HATCHBACK(5);
-        int id;
+        final int id;
 
         CarType(int id) {
             this.id = id;

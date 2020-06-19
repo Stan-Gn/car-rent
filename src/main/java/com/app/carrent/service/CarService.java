@@ -21,8 +21,8 @@ import java.util.Optional;
 @Service
 public class CarService {
 
-    private CarRepositoryInterface carRepository;
-    private CarRentRepositoryInterface carRentRepository;
+    private final CarRepositoryInterface carRepository;
+    private final CarRentRepositoryInterface carRentRepository;
 
     @Autowired
     public CarService(CarRepositoryInterface carRepository,CarRentRepositoryInterface carRentRepository) {

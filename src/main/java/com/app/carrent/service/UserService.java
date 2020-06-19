@@ -39,12 +39,10 @@ public class UserService  {
         return userRepository.findById(id);
     }
     public void adminActionOnUser(String action, User userOptional) {
-        switch (action) {
-            case "changeLockedStatus":
-                User u = userOptional;
-                u.setNonLocked(!u.isNonLocked());
-                userRepository.save(u);
-                break;
+        if ("changeLockedStatus".equals(action)) {
+            User u = userOptional;
+            u.setNonLocked(!u.isNonLocked());
+            userRepository.save(u);
         }
     }
 }

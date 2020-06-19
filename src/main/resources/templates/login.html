@@ -127,8 +127,8 @@
                 <div class="frm-group">
                   <input type="submit" value="login account">
                 </div>
-                <div th:if="${param.error}">Invalid username or password.</div>
-                <div th:if="${param.logout}">Logout successful.</div>
+                <div class="errorMess" th:if="${param.error}">Invalid username or password.</div>
+                <div class="successMess" th:if="${param.logout}">Logout successful.</div>
               </form>
              <p><a href="#0">Forget password?</a></p>
             </div>

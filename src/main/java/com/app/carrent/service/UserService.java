@@ -38,11 +38,10 @@ public class UserService  {
     public Optional<User>findById(Long id){
         return userRepository.findById(id);
     }
-    public void adminActionOnUser(String action, User userOptional) {
+    public void adminActionOnUser(String action, User user) {
         if ("changeLockedStatus".equals(action)) {
-            User u = userOptional;
-            u.setNonLocked(!u.isNonLocked());
-            userRepository.save(u);
+            user.setNonLocked(!user.isNonLocked());
+            userRepository.save(user);
         }
     }
 }

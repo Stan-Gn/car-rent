@@ -1,4 +1,4 @@
-package com.app.carrent.AuthenticationComponent;
+package com.app.carrent.authenticationComponent;
 
 import com.app.carrent.model.User;
 import com.app.carrent.service.UserService;
@@ -17,8 +17,12 @@ import java.util.Optional;
 @Component
 public class SimpleAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public SimpleAuthenticationSuccessHandler(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {

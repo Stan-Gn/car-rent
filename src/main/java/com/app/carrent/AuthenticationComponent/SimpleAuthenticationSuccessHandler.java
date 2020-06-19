@@ -17,12 +17,8 @@ import java.util.Optional;
 @Component
 public class SimpleAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    private final UserService userService;
-
     @Autowired
-    public SimpleAuthenticationSuccessHandler(UserService userService) {
-        this.userService = userService;
-    }
+    private UserService userService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {

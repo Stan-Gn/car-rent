@@ -2,11 +2,15 @@ package com.app.carrent.controller;
 
 import com.app.carrent.exception.*;
 import com.app.carrent.model.Car;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.mail.MessagingException;
 
 
 @ControllerAdvice
@@ -15,7 +19,7 @@ public class CarRentAppControllerAdvice {
     @ExceptionHandler(value = Exception.class)
     public ModelAndView handleException(Exception exception) {
         ModelAndView modelAndView = new ModelAndView("exceptions");
-        modelAndView.addObject("mess",exception.getMessage());
+        modelAndView.addObject("mess", "An unexpected error occurred");
         return modelAndView;
     }
 
@@ -104,6 +108,19 @@ public class CarRentAppControllerAdvice {
         redirectAttributes.addFlashAttribute("reservationError", exception.getMessage());
         redirectAttributes.addFlashAttribute("dateConflictList", exception.getDateConflictCarRentList());
         return "redirect:/reservation?id="+exception.getId();
+    }
+
+    @ExceptionHandler(TokenValueNotFoundException.class)
+    public String handleException(TokenValueNotFoundException exception,RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute("registrationError", exception.getMessage());
+        return "redirect:/registration";
+    }
+
+    @ExceptionHandler(MailException.class)
+    public ModelAndView handleException(MailException exception){
+        ModelAndView modelAndView = new ModelAndView("exceptions");
+        modelAndView.addObject("mess", "There was an error in sending the email, if you do not receive the activation token, contact the administrator");
+        return modelAndView;
     }
 
 }

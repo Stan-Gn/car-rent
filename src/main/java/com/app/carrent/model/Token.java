@@ -12,7 +12,7 @@ public class Token {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private String token;
+    private String value;
     @OneToOne
     private User user;
 }

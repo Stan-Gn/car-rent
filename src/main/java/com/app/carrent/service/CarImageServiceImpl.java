@@ -23,7 +23,7 @@ public class CarImageServiceImpl implements CarImageServiceInterface {
     }
 
     public void save(MultipartFile file, Car car) throws ImageFileNotFoundException, InvalidImageFileExtensionException, IOImageFileTransferException {
-        String path = context.getRealPath("/") + "upload\\" + car.getMark() + car.getModel() + car.getId();
+        String path = context.getRealPath("/") + "/upload/" + car.getMark() + car.getModel() + car.getId()+".jpeg";
 
         if (file == null || file.isEmpty())
             throw new ImageFileNotFoundException("File not loaded");

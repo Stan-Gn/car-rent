@@ -208,7 +208,7 @@
           <div class="choose-car-slider owl-carousel">
             <div class="car-item" th:each="car : ${cars}">
               <div class="thumb">
-                <img src="assets/images/cars/1.jpg" alt="image">
+                <img th:src="@{/upload/}+${car.mark}+${car.model}+${car.id}+'.jpeg'" alt="image">
               </div>
               <div class="car-item-body">
                 <div class="content">

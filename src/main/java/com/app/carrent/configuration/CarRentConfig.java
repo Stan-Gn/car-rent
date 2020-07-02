@@ -5,6 +5,7 @@ import com.app.carrent.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.multipart.MultipartResolver;
@@ -20,6 +21,7 @@ public class CarRentConfig {
     }
 
     @Bean
+    @Scope("prototype")
     public Page<Car> fiveCars() {
         return carService.findAll(PageRequest.of(0, 5));
     }

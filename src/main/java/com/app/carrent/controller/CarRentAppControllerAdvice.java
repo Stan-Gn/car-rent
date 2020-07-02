@@ -66,16 +66,7 @@ public class CarRentAppControllerAdvice {
         modelAndView.addObject("addCarImageError", exception.getMessage());
         return modelAndView;
     }
-
-    @ExceptionHandler(IOImageFileTransferException.class)
-    public ModelAndView handleException(IOImageFileTransferException exception) {
-        ModelAndView modelAndView = new ModelAndView("addNewCar");
-        modelAndView.addObject("car", new Car());
-        modelAndView.addObject("addCarImageError", exception.getMessage());
-        return modelAndView;
-    }
-
-
+    
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ModelAndView handleException(MaxUploadSizeExceededException exception) {
         ModelAndView modelAndView = new ModelAndView("addNewCar");

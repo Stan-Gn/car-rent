@@ -3,7 +3,10 @@ package com.app.carrent.service;
 
 import com.app.carrent.controller.parser.CarRentDateTimeParser;
 import com.app.carrent.exception.DatesToFilterAreNotValidException;
+import com.app.carrent.exception.ImageFileNotFoundException;
+import com.app.carrent.exception.InvalidImageFileExtensionException;
 import com.app.carrent.model.Car;
+import com.app.carrent.model.ImageFile;
 import com.app.carrent.repository.CarRentRepositoryInterface;
 import com.app.carrent.repository.CarRepositoryInterface;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +15,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -46,8 +51,22 @@ public class CarService {
         carRepository.delete(car);
     }
 
-    public Car save(Car car) {
+    public Car save(Car car, MultipartFile file) throws IOException, InvalidImageFileExtensionException {
+
+        saveImageFileToCar(car, file);
+
         return carRepository.save(car);
+    }
+
+    private void saveImageFileToCar(Car car, MultipartFile file) throws InvalidImageFileExtensionException, IOException {
+        if (file == null || file.isEmpty())
+            throw new ImageFileNotFoundException("File not loaded");
+
+        if (!(file.getContentType().toLowerCase().contains("jpg") || file.getContentType().toLowerCase().contains("jpeg")))
+            throw new InvalidImageFileExtensionException("Invalid file extension");
+
+        ImageFile imageFile = new ImageFile(file.getBytes());
+        car.setImageFile(imageFile);
     }
 
     public Page<Car> getCarsPage(int currentPageNumber,

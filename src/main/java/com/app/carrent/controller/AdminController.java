@@ -7,6 +7,7 @@ import com.app.carrent.model.CarRent;
 import com.app.carrent.model.User;
 import com.app.carrent.service.*;
 import javassist.NotFoundException;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -29,16 +31,13 @@ public class AdminController {
     private final UserService userService;
     private final CarRentService carRentService;
     private final CarService carService;
-    private final CarImageServiceInterface imageService;
 
 
     @Autowired
-    public AdminController(UserService userService, CarRentService carRentService, CarService carService,
-                           CarImageServiceInterface imageService) {
+    public AdminController(UserService userService, CarRentService carRentService, CarService carService) {
         this.userService = userService;
         this.carRentService = carRentService;
         this.carService = carService;
-        this.imageService = imageService;
     }
 
     @GetMapping("/admin")
@@ -149,7 +148,7 @@ public class AdminController {
 
     @PostMapping("/admin/car-list-admin/addCar")
     public ModelAndView addCar(@ModelAttribute(value = "car") @Valid Car car, Errors errors,
-                               @RequestParam(value = "file") MultipartFile file) throws ImageFileNotFoundException, InvalidImageFileExtensionException, IOImageFileTransferException {
+                               @RequestParam(value = "file") MultipartFile file) throws IOException, InvalidImageFileExtensionException {
         ModelAndView modelAndView = new ModelAndView("addNewCar");
 
         if (errors.hasErrors()) {
@@ -157,8 +156,7 @@ public class AdminController {
             return modelAndView;
         }
 
-        carService.save(car);
-        imageService.save(file, car);
+        carService.save(car,file);
         modelAndView.addObject("success", "Correctly added car");
 
         return modelAndView;

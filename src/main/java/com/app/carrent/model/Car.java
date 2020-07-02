@@ -37,6 +37,9 @@ public class Car {
     @Min(value = 0,message = "The value should be greater than zero")
     private double pricePerKm;
 
+    @OneToOne(cascade = {CascadeType.ALL})
+    private ImageFile imageFile;
+
     public Car(String mark, String model, CarType type, double ppd, double ppkm, String desc, int year) {
         this.mark = mark;
         this.model = model;

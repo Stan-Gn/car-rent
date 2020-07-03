@@ -61,8 +61,7 @@ public class UserController {
             return "registration";
         }
 
-        String url =  request.getRequestURL().toString();
-        userService.saveUser(user,url);
+        userService.saveUser(user);
         model.addAttribute("regSuccess", "activate account - click the link sent to the email address provided in the registration form");
         return "registration";
     }

@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,27 +23,30 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final TokenRepositoryInterface tokenRepository;
     private final MailService mailService;
+    private final HttpServletRequest request;
 
     @Autowired
     public UserService(UserRepositoryInterface userRepository,
                        PasswordEncoder passwordEncoder,
                        TokenRepositoryInterface tokenRepository,
-                       MailService mailService) {
+                       MailService mailService,HttpServletRequest request) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenRepository = tokenRepository;
         this.mailService = mailService;
+        this.request = request;
     }
 
     public Optional<User> findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    public User saveUser(User user, String url) throws MessagingException {
+    public User saveUser(User user) throws MessagingException {
         user.setEnabled(false);
         user.setRole(User.Role.USER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User savedUser = userRepository.save(user);
+        String url = request.getRequestURL().toString();
         sendToken(user, url);
         return savedUser;
     }

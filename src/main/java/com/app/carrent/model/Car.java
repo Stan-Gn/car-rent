@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class Car {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NotBlank(message = "Mark field cannot be empty")
@@ -40,7 +40,7 @@ public class Car {
     @OneToOne(cascade = {CascadeType.ALL})
     private ImageFile imageFile;
 
-    public Car(String mark, String model, CarType type, double ppd, double ppkm, String desc, int year) {
+    public Car(String mark, String model, CarType type, double ppd, double ppkm, String desc, int year, ImageFile imageFile) {
         this.mark = mark;
         this.model = model;
         this.carType = type;
@@ -48,6 +48,7 @@ public class Car {
         this.pricePerKm = ppkm;
         this.description = desc;
         this.year = year;
+        this.imageFile = imageFile;
     }
 
     public enum CarType {

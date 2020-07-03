@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 public class CarRent {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private LocalDateTime pickUpDate;
     private LocalDateTime dropOffDate;

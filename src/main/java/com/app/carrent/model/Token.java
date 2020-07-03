@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Setter
 public class Token {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String value;
     @OneToOne

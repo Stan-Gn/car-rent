@@ -9,6 +9,7 @@ import com.app.carrent.model.Car;
 import com.app.carrent.model.ImageFile;
 import com.app.carrent.repository.CarRentRepositoryInterface;
 import com.app.carrent.repository.CarRepositoryInterface;
+import com.app.carrent.validations.LocalDateTimeCarRentValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +31,7 @@ public class CarService {
     private final CarRentRepositoryInterface carRentRepository;
 
     @Autowired
-    public CarService(CarRepositoryInterface carRepository,CarRentRepositoryInterface carRentRepository) {
+    public CarService(CarRepositoryInterface carRepository, CarRentRepositoryInterface carRentRepository) {
         this.carRepository = carRepository;
         this.carRentRepository = carRentRepository;
     }
@@ -80,13 +81,19 @@ public class CarService {
         if (isAllDatesArePresentAndNotEmptyToFilterUnreservedCars(pickUpDate, pickUpTime, dropOffDate, dropOffTime)) {
             LocalDateTime pickUp = CarRentDateTimeParser.parseLocalDateTime(pickUpDate.get(), pickUpTime.get());
             LocalDateTime dropOff = CarRentDateTimeParser.parseLocalDateTime(dropOffDate.get(), dropOffTime.get());
-            if (pickUp != null && dropOff != null) {
-                return carRentRepository.findCarsNotReserved(pickUp, dropOff, pageRequest);
+            LocalDateTimeCarRentValidator localDateTimeCarRentValidator = new LocalDateTimeCarRentValidator();
+            if (localDateTimeCarRentValidator.pickUpDateOrDropOfDateIsNull(pickUp, dropOff)) {
+                throw new DatesToFilterAreNotValidException("Dates to filter are not valid");
+            } else if (localDateTimeCarRentValidator.checkingIfPickUpDateIsAfterDropOffDate(pickUp, dropOff)) {
+                throw new DatesToFilterAreNotValidException("Dates to filter are not valid - Pick up date is after drop of date ");
+            } else if (localDateTimeCarRentValidator.checkingIfPickUpDateIsBeforeNow(pickUp)){
+                throw new DatesToFilterAreNotValidException("Dates to filter are not valid - Pick up date is before Today's date");
             }
-            else throw new DatesToFilterAreNotValidException("Dates to filter are not valid");
+                return carRentRepository.findCarsNotReserved(pickUp, dropOff, pageRequest);
         } else
             return findAll(pageRequest);
     }
+
     private boolean isAllDatesArePresentAndNotEmptyToFilterUnreservedCars(Optional<String> pickUpDate, Optional<String> pickUpTime, Optional<String> dropOffDate, Optional<String> dropOffTime) {
         return pickUpDate.isPresent() && !pickUpDate.get().isEmpty()
                 && pickUpTime.isPresent() && !pickUpTime.get().isEmpty()

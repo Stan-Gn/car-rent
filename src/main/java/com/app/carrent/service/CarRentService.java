@@ -6,6 +6,7 @@ import com.app.carrent.model.Car;
 import com.app.carrent.model.CarRent;
 import com.app.carrent.model.User;
 import com.app.carrent.repository.CarRentRepositoryInterface;
+import com.app.carrent.validations.LocalDateTimeCarRentValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -107,15 +108,16 @@ public class CarRentService {
 
         LocalDateTime pickUp = CarRentDateTimeParser.parseLocalDateTime(pickUpDate, pickUpTime);
         LocalDateTime dropOff = CarRentDateTimeParser.parseLocalDateTime(dropOffDate, dropOffTime);
+        LocalDateTimeCarRentValidator localDateTimeCarRentValidator = new LocalDateTimeCarRentValidator();
 
-        if (pickUp == null || dropOff == null) {
+        if (localDateTimeCarRentValidator.pickUpDateOrDropOfDateIsNull(pickUp,dropOff)) {
             throw new DatesToCarReservationAreNotValidException("Invalid date format", id);
         }
 
-        if (checkingIfPickUpDateIsAfterDropOffDate(pickUp, dropOff))
+        if (localDateTimeCarRentValidator.checkingIfPickUpDateIsAfterDropOffDate(pickUp, dropOff))
             throw new DatesToCarReservationAreNotValidException("Pickup date is after drop off date",id);
 
-        if (checkingIfPickUpDateIsBeforeNow(pickUp))
+        if (localDateTimeCarRentValidator.checkingIfPickUpDateIsBeforeNow(pickUp))
             throw new DatesToCarReservationAreNotValidException("Pickup date is before current date.",id);
 
         List<CarRent> dateConflictCarRentList = findDateConflict(pickUp, dropOff, carToRent);
@@ -147,14 +149,6 @@ public class CarRentService {
     private void checkingDateConflicts(List<CarRent> dateConflictCarRentList,long id) {
         if (!dateConflictCarRentList.isEmpty())
             throw new DatesToCarReservationConflictValidException("There is a conflict between booking dates", dateConflictCarRentList,id);
-    }
-
-    private boolean checkingIfPickUpDateIsBeforeNow(LocalDateTime pickUp) {
-        return pickUp.isBefore(LocalDateTime.now());
-    }
-
-    private boolean checkingIfPickUpDateIsAfterDropOffDate(LocalDateTime pickUp, LocalDateTime dropOff) {
-        return (pickUp.isAfter(dropOff));
     }
 
     private boolean checkingIfDateTimeFieldsAreEmpty(String pickUpDate, String pickUpTime, String dropOffDate, String dropOffTime) {

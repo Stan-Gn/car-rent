@@ -7,7 +7,7 @@ The application has been deployed on https://carrent-app.herokuapp.com/ with dat
 
 
 # launching application
-Input data needed for application operation - data loaded into the H2 database, loaded from the DataLoader class - car list with pictures, list of users and rental list.
+Input data needed for application operation - data loaded into the H2 database, loaded from the DataLoader class - car list with pictures, list of users and rental list. For the function to send an email with an activation link to work properly, enter username and password of the email in application.properties.
 
 # technologies
   *	Spring Boot, 
